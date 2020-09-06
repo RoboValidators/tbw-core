@@ -1,43 +1,40 @@
-import reportRepository from "./repositories/ReportRepository";
-import ReportModel from "./models/Report";
-
-const lastReportId = "bindie";
+import tbwRepository from "./repositories/TBWRepository";
+import TrueBlockWeightModel from "./models/TrueBlockWeight";
 
 export default class DB {
   private constructor() {}
 
-  // static async clearStakes(): Promise<void> {
-  //   const stakes = await stakeRepository.find();
-  //   const batch = stakeRepository.createBatch();
+  static async addBatch(tbws: TrueBlockWeightModel[]): Promise<void> {
+    const batch = tbwRepository.createBatch();
 
-  //   stakes.forEach((stake) => batch.delete(stake));
+    tbws.forEach((tbw) => batch.create(tbw));
 
-  //   await batch.commit();
+    await batch.commit();
+  }
+
+  // static async getLastReport(): Promise<Date> {
+  //   const result = await reportRepository.findById(lastReportId);
+  //   if (result) {
+  //     return result.date;
+  //   }
+
+  //   // Set new default date
+  //   const newDate = new Date();
+  //   await DB.setLastReport(newDate);
+  //   return newDate;
   // }
 
-  static async getLastReport(): Promise<Date> {
-    const result = await reportRepository.findById(lastReportId);
-    if (result) {
-      return result.date;
-    }
+  // static async setLastReport(date: Date): Promise<void> {
+  //   const result = await reportRepository.findById(lastReportId);
 
-    // Set new default date
-    const newDate = new Date();
-    await DB.setLastReport(newDate);
-    return newDate;
-  }
+  //   if (result) {
+  //     await reportRepository.update({ ...result, date });
+  //   } else {
+  //     const report = new ReportModel();
+  //     report.id = lastReportId;
+  //     report.date = date;
 
-  static async setLastReport(date: Date): Promise<void> {
-    const result = await reportRepository.findById(lastReportId);
-
-    if (result) {
-      await reportRepository.update({ ...result, date });
-    } else {
-      const report = new ReportModel();
-      report.id = lastReportId;
-      report.date = date;
-
-      await reportRepository.create(report);
-    }
-  }
+  //     await reportRepository.create(report);
+  //   }
+  // }
 }
