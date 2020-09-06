@@ -4,7 +4,7 @@ import { Utils } from "@arkecosystem/crypto";
 import DB from "../database";
 import LoggerService from "./LoggerService";
 import ContainerService from "./ContainerService";
-import { Block, Options, Plugins, Attributes, DelegateAttrs, VoterReward } from "../types";
+import { Block, Options, Plugins, Attributes, ValidatorAttrs, VoterReward } from "../types";
 import Parser from "../utils/parser";
 
 export default class TbwService {
@@ -20,7 +20,9 @@ export default class TbwService {
 
     // Get validator wallet, delegate attributes and calculate the total block fee
     const validatorWallet = walletManager.findByPublicKey(options.validator.publicKey);
-    const delegateAttrs = validatorWallet.getAttribute<DelegateAttrs>(Attributes.VALIDATOR);
+    const validatorAttrs = validatorWallet.getAttribute<ValidatorAttrs>(Attributes.VALIDATOR);
+
+    const totalVoteBalance = Parser.normalize(validatorAttrs.voteBalance);
     const totalBlockFee = block.totalFee.plus(block.reward);
 
     logger.info(`Calculating rewards for ${voters.length} voters on block ${block.height}`);
@@ -28,7 +30,7 @@ export default class TbwService {
     // Calculate reward for this block per voter
     const votersRewards: VoterReward[] = [];
     for (const wallet of voters) {
-      const totalPower = wallet.balance;
+      const totalPower = Parser.normalize(wallet.balance);
 
       if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
         const stakePower = wallet.getAttribute<Utils.BigNumber>(Attributes.STAKEPOWER);
@@ -37,10 +39,10 @@ export default class TbwService {
 
       logger.info(`Total Power for ${wallet.address}: ${totalPower}`);
 
-      const share = totalPower.div(delegateAttrs.voteBalance);
+      const share = totalPower.div(totalVoteBalance);
       const reward = share.times(totalBlockFee);
 
-      logger.info(`delegate vote blanace ${delegateAttrs.voteBalance}`);
+      logger.info(`delegate vote blanace ${totalVoteBalance}`);
       logger.info(`Share for ${wallet.address}: ${share}`);
       logger.info(`Share for ${wallet.address}: ${reward}`);
 
