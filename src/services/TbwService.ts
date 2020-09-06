@@ -21,7 +21,7 @@ export default class TbwService {
     // Get validator wallet, delegate attributes and calculate the total block fee
     const validatorWallet = walletManager.findByPublicKey(options.validator.publicKey);
     const delegateAttrs = validatorWallet.getAttribute<DelegateAttrs>(Attributes.VALIDATOR);
-    const totalBlockFee = block.totalFee.minus(block.removedFee);
+    const totalBlockFee = block.totalFee.plus(block.reward);
 
     logger.info(`Calculating rewards for ${voters.length} voters on block ${block.height}`);
 
