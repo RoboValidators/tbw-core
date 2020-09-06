@@ -9,8 +9,8 @@ export type ParserType = Utils.BigNumber | BigNumber | string | number;
 
 export interface VoterReward {
   wallet: string;
-  share: Utils.BigNumber;
-  reward: Utils.BigNumber;
+  share: BigNumber;
+  reward: BigNumber;
   blockHeight: number;
 }
 

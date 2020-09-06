@@ -1,5 +1,4 @@
 import { Database } from "@arkecosystem/core-interfaces";
-import { Utils } from "@arkecosystem/crypto";
 
 import DB from "../database";
 import LoggerService from "./LoggerService";
@@ -24,8 +23,8 @@ export default class TbwService {
     const validatorWallet = walletManager.findByPublicKey(options.validator.publicKey);
     const validatorAttrs = validatorWallet.getAttribute<ValidatorAttrs>(Attributes.VALIDATOR);
 
-    const totalVoteBalance = validatorAttrs.voteBalance;
-    const totalBlockFee = block.totalFee.plus(block.reward);
+    const totalVoteBalance = Parser.normalize(validatorAttrs.voteBalance);
+    const totalBlockFee = Parser.normalize(block.totalFee.plus(block.reward));
 
     logger.info(`Calculating rewards for ${voters.length} voters on block ${block.height}`);
 
@@ -39,10 +38,7 @@ export default class TbwService {
         totalPower = totalPower.plus(stakePower);
       }
 
-      const nTotalPower = Parser.normalize(totalPower);
-      const ntotalVoteBalance = Parser.normalize(totalVoteBalance);
-
-      const share = Utils.BigNumber.make(nTotalPower.div(ntotalVoteBalance).times(1e8).toString());
+      const share = Parser.normalize(totalPower).div(totalVoteBalance);
       const reward = share.times(totalBlockFee);
 
       votersRewards.push({
