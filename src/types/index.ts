@@ -1,34 +1,17 @@
 import { Interfaces, Utils } from "@arkecosystem/crypto";
 import { Interfaces as StakeInterfaces } from "@nosplatform/stake-transactions-crypto";
-import { Container } from "@arkecosystem/core-interfaces";
+import { Container, State } from "@arkecosystem/core-interfaces";
 import BigNumber from "bignumber.js";
 
+export type DelegateAttrs = State.IWalletDelegateAttributes;
 export type Stake = StakeInterfaces.IStakeObject;
-export type Block = Interfaces.IBlockData;
 export type ParserType = Utils.BigNumber | BigNumber | string | number;
-export type StakeTimestamps = {
-  created: number;
-  graceEnd: number;
-  powerUp: number;
-  redeemable: number;
-};
 
-export type StakeData = {
-  stakeLevel: string;
-  total: BigNumber;
-}[];
-
-export interface PowerUp {
-  stake: Stake;
+export interface VoterReward {
+  wallet: State.IWallet;
+  share: Utils.BigNumber;
+  reward: Utils.BigNumber;
   block: Block;
-}
-
-export interface PowerUpJob extends PowerUp {
-  event: Events;
-}
-
-export interface CronJob {
-  event: Events;
 }
 
 export interface Publisher {
@@ -47,26 +30,35 @@ export interface Options extends Container.IPluginOptions {
     accessKey: string;
     accessSecret: string;
   };
-  minimumAmount: number;
   startHeight: number;
-  txUrl: string;
-  token: string;
-  currency: string;
-  cron: string;
   validator: {
     name: string;
     publicKey: string;
   };
 }
 
-export interface BlockDTO {
-  data: {
-    timestamp: {
-      epoch: number;
-      unix: number;
-      human: Date;
-    };
-  };
+// TODO - use interface of @compendia/crypto when published
+export interface Block {
+  id?: string;
+  idHex?: string;
+
+  timestamp: number;
+  version: number;
+  height: number;
+  previousBlockHex?: string;
+  previousBlock: string;
+  numberOfTransactions: number;
+  totalAmount: Utils.BigNumber;
+  totalFee: Utils.BigNumber;
+  removedFee: Utils.BigNumber;
+  reward: Utils.BigNumber;
+  payloadLength: number;
+  payloadHash: string;
+  generatorPublicKey: string;
+
+  blockSignature?: string;
+  serialized?: string;
+  transactions?: Interfaces.ITransactionData[];
 }
 
 export enum Publishers {
@@ -75,6 +67,16 @@ export enum Publishers {
 }
 
 export enum Events {
-  Cron = "cron",
   BlockApplied = "block.applied"
+}
+
+export enum Plugins {
+  DATABASE = "database",
+  LOGGER = "logger",
+  EVENT_EMITTER = "event-emitter"
+}
+
+export enum Attributes {
+  STAKEPOWER = "stakePower",
+  VALIDATOR = "delegate"
 }
