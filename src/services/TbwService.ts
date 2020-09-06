@@ -51,6 +51,7 @@ export default class TbwService {
 
     logger.info(`=== BEGIN ${block.height} ===`);
     logger.info(`Total block fee: ${Parser.normalize(totalBlockFee)}`);
+    logger.info(`block reward: ${Parser.normalize(block.reward)}`);
     logger.info(`block fee: ${Parser.normalize(block.totalFee)}`);
     logger.info(`block fee removed: ${Parser.normalize(block.removedFee)}`);
     logger.info(`to distribute: ${Parser.normalize(totalPayout)}`);
