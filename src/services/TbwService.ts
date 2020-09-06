@@ -35,14 +35,14 @@ export default class TbwService {
     // Calculate reward for this block per voter
     const votersRewards: VoterReward[] = [];
     for (const wallet of voters) {
-      const totalPower = Parser.normalize(wallet.balance);
+      let totalPower = Parser.normalize(wallet.balance);
       logger.info(`Total balance ${wallet.address}: ${totalPower}`);
       logger.info(wallet);
       logger.info(`has attr?: ${wallet.hasAttribute(Attributes.STAKEPOWER)}`);
 
       if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
         const stakePower = wallet.getAttribute(Attributes.STAKEPOWER);
-        totalPower.plus(Parser.normalize(stakePower));
+        totalPower = totalPower.plus(Parser.normalize(stakePower));
         logger.info(`Added stake power for ${wallet.address}: ${Parser.normalize(stakePower)}`);
       }
 
