@@ -1,13 +1,13 @@
 import { EventEmitter } from "@arkecosystem/core-interfaces";
 
-import { Events, Options, BlockApplied } from "./types";
+import { Events, Options, Block } from "./types";
 import TbwService from "./services/TbwService";
 import LoggerService from "./services/LoggerService";
 
 class Listener {
   setUp(options: Partial<Options>, emitter: EventEmitter.EventEmitter) {
     // Setup powerUp trigger and queue
-    emitter.on(Events.BlockApplied, async ({ block }: BlockApplied) => {
+    emitter.on(Events.BlockApplied, async (block: Block) => {
       LoggerService.getLogger().info(`vkey ========= ${options.validator.publicKey} ===========`);
       LoggerService.getLogger().info(`block key ========= ${block.generatorPublicKey} ===========`);
 

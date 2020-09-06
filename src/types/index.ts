@@ -22,9 +22,6 @@ export interface PowerUp {
   stake: Stake;
   block: Block;
 }
-export interface BlockApplied {
-  block: Block;
-}
 
 export interface PowerUpJob extends PowerUp {
   event: Events;
