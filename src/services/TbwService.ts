@@ -37,7 +37,7 @@ export default class TbwService {
     for (const wallet of voters) {
       const totalPower = Parser.normalize(wallet.balance);
       logger.info(`Total balance ${wallet.address}: ${totalPower}`);
-      logger.info(`Whole wallet ${wallet}: ${totalPower}`);
+      logger.info(wallet);
       logger.info(`has attr?: ${wallet.hasAttribute(Attributes.STAKEPOWER)}`);
 
       if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
