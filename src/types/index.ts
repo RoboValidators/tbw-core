@@ -8,10 +8,10 @@ export type Stake = StakeInterfaces.IStakeObject;
 export type ParserType = Utils.BigNumber | BigNumber | string | number;
 
 export interface VoterReward {
-  wallet: State.IWallet;
-  share: BigNumber;
-  reward: BigNumber;
-  block: Block;
+  wallet: string;
+  share: Utils.BigNumber;
+  reward: Utils.BigNumber;
+  blockHeight: number;
 }
 
 export interface Publisher {

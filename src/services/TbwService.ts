@@ -4,8 +4,7 @@ import DB from "../database";
 import LoggerService from "./LoggerService";
 import ContainerService from "./ContainerService";
 import { Block, Options, Plugins, Attributes, ValidatorAttrs, VoterReward } from "../types";
-import Parser from "../utils/parser";
-import BigNumber from "bignumber.js";
+// import Parser from "../utils/parser";
 
 export default class TbwService {
   static async check(block: Block, options: Options) {
@@ -13,10 +12,6 @@ export default class TbwService {
     const logger = LoggerService.getLogger();
     const dbService = ContainerService.resolve<Database.IDatabaseService>(Plugins.DATABASE);
     const walletManager = dbService.walletManager;
-
-    // Normalize values and parse to true BigNumbers
-    const blockTotalFee = Parser.normalize(block.totalFee);
-    const blockReward = Parser.normalize(block.reward);
 
     // Get all voters for validator
     const voters = walletManager
@@ -27,54 +22,38 @@ export default class TbwService {
     const validatorWallet = walletManager.findByPublicKey(options.validator.publicKey);
     const validatorAttrs = validatorWallet.getAttribute<ValidatorAttrs>(Attributes.VALIDATOR);
 
-    const totalVoteBalance = Parser.normalize(validatorAttrs.voteBalance);
-    const totalBlockFee = blockTotalFee.plus(blockReward);
+    const totalVoteBalance = validatorAttrs.voteBalance;
+    const totalBlockFee = block.totalFee.plus(block.reward);
 
     logger.info(`Calculating rewards for ${voters.length} voters on block ${block.height}`);
 
     // Calculate reward for this block per voter
     const votersRewards: VoterReward[] = [];
     for (const wallet of voters) {
-      let totalPower = Parser.normalize(wallet.balance);
-      logger.info(`Total balance ${wallet.address}: ${totalPower}`);
-      logger.info(wallet);
-      logger.info(`has attr?: ${wallet.hasAttribute(Attributes.STAKEPOWER)}`);
+      let totalPower = wallet.balance;
 
       if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
         const stakePower = wallet.getAttribute(Attributes.STAKEPOWER);
-        totalPower = totalPower.plus(Parser.normalize(stakePower));
-        logger.info(`Added stake power for ${wallet.address}: ${Parser.normalize(stakePower)}`);
+        totalPower = totalPower.plus(stakePower);
       }
 
-      logger.info(`Total Power for ${wallet.address}: ${totalPower}`);
-
-      const share = totalPower.div(totalVoteBalance);
+      const share = totalPower.div(totalVoteBalance).times(1e8);
       const reward = share.times(totalBlockFee);
 
-      logger.info(`delegate vote blanace ${totalVoteBalance}`);
-      logger.info(`Share for ${wallet.address}: ${share}`);
-      logger.info(`Share for ${wallet.address}: ${reward}`);
-
       votersRewards.push({
-        wallet,
+        wallet: wallet.address,
         share,
         reward,
-        block
+        blockHeight: block.height
       });
+
+      logger.info(`=== BEGIN ${block.height} ===`);
+      votersRewards.forEach((v) => {
+        logger.info(v.wallet);
+        logger.info(v.reward);
+        logger.info(v.share);
+      });
+      logger.info(`=== END ${block.height} ===`);
     }
-
-    const totalPayout = new BigNumber(0);
-    votersRewards.forEach((v) => totalPayout.plus(v.reward));
-
-    logger.info(`=== BEGIN ${block.height} ===`);
-    logger.info(`Total block fee: ${totalBlockFee}`);
-    logger.info(`block reward: ${block.reward}`);
-    logger.info(`block fee: ${block.totalFee}`);
-    logger.info(`block fee removed: ${block.removedFee}`);
-    logger.info(`to distribute: ${totalPayout}`);
-    votersRewards.forEach((v) => {
-      logger.info(`${v.wallet.address} gets ${v.reward} with share ${v.share}`);
-    });
-    logger.info(`=== END ${block.height} ===`);
   }
 }
