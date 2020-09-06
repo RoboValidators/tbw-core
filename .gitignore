@@ -1,0 +1,14 @@
+# Dependency directories
+node_modules
+
+# Build
+dist
+
+# DB
+db.json
+
+# Test file
+./src/test.ts
+
+# Firebase secrets
+serviceAccountKey.json

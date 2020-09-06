@@ -1,0 +1,21 @@
+{
+  "extends": ["config:base"],
+  "labels": ["Renovate 🌴"],
+  "semanticCommits": true,
+  "statusCheckVerify": true,
+  "automergeType": "branch",
+  "packageRules": [
+    {
+      "packagePatterns": ["*"],
+      "semanticCommitType": "renovate"
+    },
+    {
+      "updateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "packageNames": ["eslint"],
+      "groupName": "lint"
+    }
+  ]
+}

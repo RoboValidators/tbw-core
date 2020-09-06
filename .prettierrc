@@ -1,0 +1,7 @@
+{
+  "trailingComma": "none",
+  "packageManager": "yarn",
+  "printWidth": 100,
+  "useTabs": false,
+  "tabWidth": 2
+}
