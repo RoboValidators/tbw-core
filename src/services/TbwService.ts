@@ -1,9 +1,11 @@
 import { Database } from "@arkecosystem/core-interfaces";
+import { Utils } from "@arkecosystem/crypto";
 
 import DB from "../database";
 import LoggerService from "./LoggerService";
 import ContainerService from "./ContainerService";
 import { Block, Options, Plugins, Attributes, ValidatorAttrs, VoterReward } from "../types";
+import Parser from "../utils/parser";
 // import Parser from "../utils/parser";
 
 export default class TbwService {
@@ -37,7 +39,10 @@ export default class TbwService {
         totalPower = totalPower.plus(stakePower);
       }
 
-      const share = totalPower.div(totalVoteBalance).times(1e8);
+      const nTotalPower = Parser.normalize(totalPower);
+      const ntotalVoteBalance = Parser.normalize(totalVoteBalance);
+
+      const share = Utils.BigNumber.make(nTotalPower.div(ntotalVoteBalance).times(1e8).toString());
       const reward = share.times(totalBlockFee);
 
       votersRewards.push({
