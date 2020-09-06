@@ -5,7 +5,11 @@ import TbwService from "./services/TbwService";
 import LoggerService from "./services/LoggerService";
 
 class Listener {
-  setUp(options: Partial<Options>, emitter: EventEmitter.EventEmitter) {
+  setUp(
+    options: Partial<Options>,
+    container: Container.IContainer,
+    emitter: EventEmitter.EventEmitter
+  ) {
     // Setup powerUp trigger and queue
     emitter.on(Events.BlockApplied, async (block: Block) => {
       LoggerService.getLogger().info(`vkey ========= ${options.validator.publicKey} ===========`);
@@ -15,7 +19,7 @@ class Listener {
         block.height > options.startHeight &&
         options.validator.publicKey === block.generatorPublicKey
       ) {
-        TbwService.check(block, options as Options);
+        TbwService.check(block, container, options as Options);
       }
     });
   }

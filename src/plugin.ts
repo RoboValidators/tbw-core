@@ -20,7 +20,7 @@ export const plugin: Container.IPluginDescriptor = {
 
     LoggerService.setLogger(logger);
     Options.setOptions(options as any);
-    listener.setUp(options, emitter);
+    listener.setUp(options, container, emitter);
   },
   async deregister(container: Container.IContainer, _) {
     container.resolvePlugin<Logger.ILogger>("logger").info(wall(`Deregistering ${alias}.`));

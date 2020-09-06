@@ -1,14 +1,14 @@
 import { Block, Options } from "../types";
-import { app } from "@arkecosystem/core-container";
 import DB from "../database";
-import { Database } from "@arkecosystem/core-interfaces";
+import { Database, Container } from "@arkecosystem/core-interfaces";
 import LoggerService from "./LoggerService";
 // import { IDatabaseService } from "@arkecosystem/core-interfaces";
 
 export default class TbwService {
-  static async check(block: Block, options: Options) {
+  static async check(block: Block, container: Container.IContainer, options: Options) {
     const logger = LoggerService.getLogger();
-    const walletManager = app.resolvePlugin<Database.IDatabaseService>("database").walletManager;
+    const walletManager = container.resolvePlugin<Database.IDatabaseService>("database")
+      .walletManager;
 
     const voters = walletManager.allByAddress().filter((wallet) => {
       const vote = wallet.getAttribute<string>("vote");
