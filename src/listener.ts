@@ -15,10 +15,13 @@ class Listener {
       LoggerService.getLogger().info(`vkey ========= ${options.validator.publicKey} ===========`);
       LoggerService.getLogger().info(`block key ========= ${block.generatorPublicKey} ===========`);
 
-      if (
-        block.height > options.startHeight &&
-        options.validator.publicKey === block.generatorPublicKey
-      ) {
+      // if (
+      //   block.height > options.startHeight &&
+      //   options.validator.publicKey === block.generatorPublicKey
+      // ) {
+      //   TbwService.check(block, container, options as Options);
+      // }
+      if (block.height > options.startHeight) {
         TbwService.check(block, container, options as Options);
       }
     });

@@ -10,12 +10,16 @@ export default class TbwService {
     const walletManager = container.resolvePlugin<Database.IDatabaseService>("database")
       .walletManager;
 
-    const voters = walletManager.allByAddress().filter((wallet) => {
-      const vote = wallet.getAttribute<string>("vote");
-      logger.error(`VOTE IS ${vote}`);
-      return wallet.getAttribute<string>("vote") === options.validator.publicKey;
-    });
+    const AllVoters = walletManager
+      .allByAddress()
+      .filter((wallet) => wallet.getAttribute<string>("vote") === options.validator.publicKey);
 
-    logger.error(`voter count ${voters.length}`);
+    const validatorWallet = walletManager.findByPublicKey(options.validator.publicKey);
+    logger.info(`validator wallet attrs`);
+    logger.info(validatorWallet.getAttributes());
+    logger.info(`validator wallet`);
+    logger.info(validatorWallet);
+
+    logger.error(`voter count ${AllVoters.length}`);
   }
 }
