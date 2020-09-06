@@ -51,6 +51,8 @@ export default class TbwService {
 
     logger.info(`=== BEGIN ${block.height} ===`);
     logger.info(`Total block fee: ${totalBlockFee}`);
+    logger.info(`block fee: ${block.totalFee}`);
+    logger.info(`block fee removed: ${block.removedFee}`);
     logger.info(`to distribute: ${Parser.normalize(totalPayout)}`);
     votersRewards.forEach((v) => {
       logger.info(
