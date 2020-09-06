@@ -51,8 +51,8 @@ export default class TbwService {
       logger.info(`=== BEGIN ${block.height} ===`);
       votersRewards.forEach((v) => {
         logger.info(v.wallet);
-        logger.info(v.reward);
-        logger.info(v.share);
+        logger.info(v.reward.toString());
+        logger.info(v.share.toString());
       });
       logger.info(`=== END ${block.height} ===`);
     }
