@@ -1,4 +1,4 @@
-import { EventEmitter } from "@arkecosystem/core-interfaces";
+import { EventEmitter, Container } from "@arkecosystem/core-interfaces";
 
 import { Events, Options, Block } from "./types";
 import TbwService from "./services/TbwService";
