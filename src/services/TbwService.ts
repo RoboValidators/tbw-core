@@ -37,7 +37,7 @@ export default class TbwService {
 
       logger.info(`Total Power for ${wallet.address}: ${totalPower}`);
 
-      const share = totalPower.dividedBy(delegateAttrs.voteBalance);
+      const share = totalPower.div(delegateAttrs.voteBalance);
       const reward = share.times(totalBlockFee);
 
       logger.info(`delegate vote blanace ${delegateAttrs.voteBalance}`);
