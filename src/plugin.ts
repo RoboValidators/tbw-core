@@ -5,9 +5,10 @@ import { defaults, alias } from "./defaults";
 import listener from "./listener";
 import Options from "./services/OptionsService";
 import LoggerService from "./services/LoggerService";
-import pkg from "../package.json";
 import { Plugins } from "./types";
 import ContainerService from "./services/ContainerService";
+
+import pkg from "../package.json";
 
 const wall = (text: string) => `============= ${text.toUpperCase()} =============`;
 

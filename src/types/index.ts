@@ -7,11 +7,11 @@ export type ValidatorAttrs = State.IWalletDelegateAttributes;
 export type Stake = StakeInterfaces.IStakeObject;
 export type ParserType = Utils.BigNumber | BigNumber | string | number;
 
-export interface VoterReward {
+export interface ITbw {
   wallet: string;
-  share: BigNumber;
-  reward: BigNumber;
-  blockHeight: number;
+  share: string;
+  reward: string;
+  block: number;
 }
 
 export interface Publisher {

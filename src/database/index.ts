@@ -1,40 +1,20 @@
 import tbwRepository from "./repositories/TBWRepository";
-import TrueBlockWeightModel from "./models/TrueBlockWeight";
+import historyRepository from "./repositories/HistoryRepository";
+import TbwBase from "./models/TbwBase";
 
 export default class DB {
   private constructor() {}
 
-  static async addBatch(tbws: TrueBlockWeightModel[]): Promise<void> {
-    const batch = tbwRepository.createBatch();
+  static async addBatch(tbws: TbwBase[]): Promise<void> {
+    const tbwBatch = tbwRepository.createBatch();
+    const historyBatch = historyRepository.createBatch();
 
-    tbws.forEach((tbw) => batch.create(tbw));
+    tbws.forEach((tbw) => {
+      tbwBatch.create(tbw);
+      historyBatch.create(tbw);
+    });
 
-    await batch.commit();
+    await tbwBatch.commit();
+    await historyBatch.commit();
   }
-
-  // static async getLastReport(): Promise<Date> {
-  //   const result = await reportRepository.findById(lastReportId);
-  //   if (result) {
-  //     return result.date;
-  //   }
-
-  //   // Set new default date
-  //   const newDate = new Date();
-  //   await DB.setLastReport(newDate);
-  //   return newDate;
-  // }
-
-  // static async setLastReport(date: Date): Promise<void> {
-  //   const result = await reportRepository.findById(lastReportId);
-
-  //   if (result) {
-  //     await reportRepository.update({ ...result, date });
-  //   } else {
-  //     const report = new ReportModel();
-  //     report.id = lastReportId;
-  //     report.date = date;
-
-  //     await reportRepository.create(report);
-  //   }
-  // }
 }
