@@ -1,4 +1,5 @@
 export const defaults = {
+  blacklist: [],
   startHeight: 0,
   validator: {
     name: "bindie",

@@ -23,11 +23,28 @@ export default class TbwService {
       .allByAddress()
       .filter((wallet) => wallet.getAttribute<string>("vote") === options.validator.publicKey);
 
+    const filteredVoters = voters.filter((voter) => options.blacklist.includes(voter.address));
+    const blacklistVoters = voters.filter((voter) => !options.blacklist.includes(voter.address));
+
+    // TODO abstract this logic (duplicate code);
+    const blacklistVoteBalance = blacklistVoters.reduce((acc, wallet) => {
+      let walletPower = Parser.normalize(wallet.balance);
+
+      if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
+        const stakePower = wallet.getAttribute<Utils.BigNumber>(Attributes.STAKEPOWER);
+        walletPower = walletPower.plus(Parser.normalize(stakePower));
+      }
+
+      return acc.plus(walletPower);
+    }, new BigNumber(0));
+
     // Get validator wallet, delegate attributes and calculate the total block fee
     const validatorWallet = walletManager.findByPublicKey(options.validator.publicKey);
     const validatorAttrs = validatorWallet.getAttribute<ValidatorAttrs>(Attributes.VALIDATOR);
 
-    const totalVoteBalance = Parser.normalize(validatorAttrs.voteBalance);
+    const totalVoteBalance = Parser.normalize(validatorAttrs.voteBalance).minus(
+      blacklistVoteBalance
+    );
     const totalBlockFee = Parser.normalize(block.totalFee.plus(block.reward));
     const sharePercentage = new BigNumber(options.validator.sharePercentage).div(100);
     let totalVotersPayout = new BigNumber(0);
@@ -42,7 +59,7 @@ export default class TbwService {
     TbwEntityService.initialize(licenseFee.toString(), validatorFee.toString(), block);
 
     // Calculate reward for this block per voter
-    for (const wallet of voters) {
+    for (const wallet of filteredVoters) {
       let walletPower = Parser.normalize(wallet.balance);
 
       if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
@@ -64,6 +81,7 @@ export default class TbwService {
       });
     }
 
+    // TODO add blocklist statistics
     const forgeStats = new ForgeStats();
     forgeStats.block = block.height;
     forgeStats.numberOfVoters = voters.length;

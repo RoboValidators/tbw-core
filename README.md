@@ -27,6 +27,7 @@ Don't have a vote? We're always open for $BIND donations to `cU3kVS8sgH4E4hcyaUE
 module.exports = {
     // Any other plugins ..
     "@robovalidators/tbw-core": {
+        blacklist: [], // The voters who should be blacklisted from the calculations
         startHeight: 0, // Heigh to start from
         validator: {
             name: "bindie", // Your validator name
