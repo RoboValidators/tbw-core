@@ -1,7 +1,7 @@
 # Compendia Core - True Block Weight Core Plugin
 
 <p align="center">
-    <img src="./.github/bindie-pog-wallet.png" alt="bindie" width="250"/>
+    <img src="./.github/bindie-pog-wallet-2.png" alt="bindie" width="250"/>
 
 > A Twitter & Telegram bot announcing Big $BIND stakes and daily stake reports - Created By Compendia Validator Bindie
 
