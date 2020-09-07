@@ -31,7 +31,7 @@
     "updates": "../../node_modules/npm-check-updates/bin/npm-check-updates -a"
   },
   "dependencies": {
-    "@arkecosystem/core-interfaces": "2.6.49",
+    "@arkecosystem/core-interfaces": "2.6.52",
     "bignumber.js": "9.0.0",
     "firebase": "7.19.1",
     "firebase-admin": "9.1.1",
