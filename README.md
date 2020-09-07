@@ -15,11 +15,6 @@ Consider giving validator **[Bindie](https://bindscan.io/wallets/bindie)** a vot
 
 Don't have a vote? We're always open for $BIND donations to `cU3kVS8sgH4E4hcyaUEQ6DtxwJo2Y4L8iP`
 
-## Check out the Bindie Stake report Bots
-
-- [Bindie Telegram stake bot](https://t.me/CompendiaStakes)
-- [Bindie Twitter stake bot](https://twitter.com/BindieBot)
-
 ## Credits
 - [Bindie Dev](https://t.me/BindieDev) - [Owner of the Bindie Validator](https://bindscan.io/wallets/bindie)
   - [Bindie Website](https://bindie.io/)
@@ -71,6 +66,11 @@ ccontrol start relay | forger | core
 # in your logs during startup, everything is set and done!
 
 ```
+
+## Check out the Bindie Stake report Bots
+
+- [Bindie Telegram stake bot](https://t.me/CompendiaStakes)
+- [Bindie Twitter stake bot](https://twitter.com/BindieBot)
 
 ## Security
 
