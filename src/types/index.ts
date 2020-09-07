@@ -31,10 +31,11 @@ export interface Options extends Container.IPluginOptions {
     accessSecret: string;
   };
   startHeight: number;
-  sharePercentage: number;
   validator: {
     name: string;
     publicKey: string;
+    address: string;
+    sharePercentage: number;
   };
 }
 

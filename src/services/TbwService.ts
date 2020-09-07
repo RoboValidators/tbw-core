@@ -9,6 +9,8 @@ import Parser from "../utils/parser";
 import TbwBase from "../database/models/TbwBase";
 import ForgeStats from "../database/models/Forge";
 import BigNumber from "bignumber.js";
+import TbwEntityService from "./TbwEntityService";
+import { licenseFeeCut } from "../defaults";
 
 export default class TbwService {
   static async check(block: Block, options: Options) {
@@ -28,16 +30,17 @@ export default class TbwService {
 
     const totalVoteBalance = Parser.normalize(validatorAttrs.voteBalance);
     const totalBlockFee = Parser.normalize(block.totalFee.plus(block.reward));
-    const sharePercentage = new BigNumber(options.sharePercentage).div(100);
+    const sharePercentage = new BigNumber(options.validator.sharePercentage).div(100);
     let totalPayout = new BigNumber(0);
 
     logger.info(`Calculating rewards for ${voters.length} voters on block ${block.height}`);
 
-    const TBWs: TbwBase[] = [];
-    const licenseFee = totalBlockFee.times(0.01); // 1% License Fee (ex: 100 block fee: 1 BIND)
-    const restReward = totalBlockFee.times(0.99); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
+    const licenseFee = totalBlockFee.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
+    const restReward = totalBlockFee.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
     const votersReward = restReward.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
     const validatorReward = restReward.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
+
+    TbwEntityService.initialize(licenseFee.toString(), validatorReward.toString(), block);
 
     // Calculate reward for this block per voter
     for (const wallet of voters) {
@@ -56,14 +59,12 @@ export default class TbwService {
 
       // TODO refactor and keep track of wallet power per block
       // TODO add 1 wallet to TBWs with license fee and 1 for validator fee
-      TBWs.push(
-        new TbwBase({
-          wallet: wallet.address,
-          share: share.toString(),
-          reward: voterReward.toString(),
-          block: block.height
-        })
-      );
+      TbwEntityService.push({
+        wallet: wallet.address,
+        share: share.toString(),
+        reward: voterReward.toString(),
+        block: block.height
+      });
     }
 
     // TODO refactor to reflect cuts
@@ -73,7 +74,7 @@ export default class TbwService {
     forgeStats.payout = totalPayout.toString();
     forgeStats.blockReward = totalBlockFee.toString();
 
-    db.addBatch(TBWs);
+    db.addBatch(TbwEntityService.getTbws());
     db.addStats(forgeStats);
   }
 }
