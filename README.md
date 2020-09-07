@@ -1,4 +1,4 @@
-# Compendia Core - Power Poster
+# Compendia Core - True Block Weight Core Plugin
 
 <p align="center">
     <img src="./.github/Bindie-announce.png" alt="bindie" width="125"/>
@@ -10,13 +10,13 @@
 
 ## Support
 
-Do you like Bindie's stake reports or thought this public repository was useful?
+Do you like Bindie's True Block Weight Core Plugin or thought this public repository was useful?
 
 Consider giving validator **[Bindie](https://bindscan.io/wallets/bindie)** a vote on the Compendia Network.
 
 Don't have a vote? We're always open for $BIND donations to `cU3kVS8sgH4E4hcyaUEQ6DtxwJo2Y4L8iP`
 
-## Check out the Bindie Bots in production
+## Check out the Bindie Stake report Bots
 
 - [Bindie Telegram stake bot](https://t.me/CompendiaStakes)
 - [Bindie Twitter stake bot](https://twitter.com/BindieBot)
@@ -31,46 +31,29 @@ Don't have a vote? We're always open for $BIND donations to `cU3kVS8sgH4E4hcyaUE
 
 ```javascript
 module.exports = {
-    // AFTER @arkecosystem/core-api & @arkecosystem/core-wallet-api
-    "@robovalidators/power-poster": {
-        telegram: {
-            token: "", // Telegram token (obtained from @BotFather)
-            channelId: "" // ID of the telegram channel you want to announce in
-        },
-        twitter: {
-            consumerKey: "", // Twitter API key
-            consumerSecret: "", // Twitter API secret
-            accessKey: "", // Twitter User Access Key
-            accessSecret: "" // Twitter User Access Secret
-        },
-        minimumAmount: 0, // Minimum amount of USD to announce as a "whale"-post
-        startHeight: 0, // Heigh to start the announcements from
-        txUrl: "https://bindscan.io/transactions", // API endpoint for transactions
-        token: "BIND", // Token you want to use (used in price API call)
-        currency: "USD", // Token value currency you want to query and post
-        cron: "0 18 * * *" // The cron expression used for the accumulative stake reports
+    // Any other plugins ..
+    "@robovalidators/tbw-core": {
+        startHeight: 0, // Heigh to start from
+        validator: {
+            name: "bindie", // Your validator name
+            publicKey: "032dc97447a17a85aaa20b262ea482681bed867a905b7c61487bc506a7b939bbc5", // Your validator public key
+            payoutAddress: "cU3kVS8sgH4E4hcyaUEQ6DtxwJo2Y4L8iP", // The address you'd like to receive your validator cut on
+            sharePercentage: 99 // The share percentage of your validator
+        }
     },
     // Any other plugins ..
 };
 ```
-As a tip, check your expressions here to verify they are correct: [cron expression generator](https://crontab.cronhub.io/)
 
 ```bash
-# Install Redis
-sudo apt update
-sudo apt install redis-server
-
-# Enable redis on system reboots
-sudo systemctl enable redis-server
-
 # Navigate to plugins folder
 cd ~/compendia-core/plugins/
 
 # Clone repo
-git clone https://github.com/RoboValidators/power-poster
+git clone https://github.com/RoboValidators/tbw-core
 
 # Install deps
-cd power-poster && yarn
+cd tbw-core && yarn
 
 # Create serviceAccountKey file
 touch serviceAccountKey.json
@@ -85,9 +68,8 @@ yarn build
 # Start the validator/relay
 ccontrol start relay | forger | core
 
-# If you see ============== POWER-POSTER ==============
+# If you see ============== TBW-CORE ==============
 # in your logs during startup, everything is set and done!
-# **NOTE** The log will only appear AFTER syncing due to plugin order
 
 ```
 

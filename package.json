@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@robovalidators/tbw-core",
-  "description": "Provides a social media bot for Compendia & Ark Core",
+  "description": "A True Block Weight plugin for the Bindie TBW API",
   "version": "1.0.0",
   "contributors": [
     "Bindie Dev <hello@bindie.io>"

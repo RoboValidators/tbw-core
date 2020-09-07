@@ -1,14 +1,4 @@
 export const defaults = {
-  telegram: {
-    token: "",
-    channelId: ""
-  },
-  twitter: {
-    consumerKey: "",
-    consumerSecret: "",
-    accessKey: "",
-    accessSecret: ""
-  },
   startHeight: 0,
   validator: {
     name: "bindie",

@@ -19,16 +19,6 @@ export interface Publisher {
 }
 
 export interface Options extends Container.IPluginOptions {
-  telegram: {
-    token: string;
-    channelId: string;
-  };
-  twitter: {
-    consumerKey: string;
-    consumerSecret: string;
-    accessKey: string;
-    accessSecret: string;
-  };
   startHeight: number;
   validator: {
     name: string;
