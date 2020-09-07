@@ -12,6 +12,7 @@ export interface ITbw {
   share: string;
   reward: string;
   block: number;
+  power: string;
 }
 
 export interface Publisher {
@@ -34,7 +35,7 @@ export interface Options extends Container.IPluginOptions {
   validator: {
     name: string;
     publicKey: string;
-    address: string;
+    payoutAddress: string;
     sharePercentage: number;
   };
 }

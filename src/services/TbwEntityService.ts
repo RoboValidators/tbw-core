@@ -14,9 +14,10 @@ export default class TbwEntityService {
     const licenseFeePercentage = licenseFeeCut * 100;
 
     TbwEntityService.push({
-      wallet: this.options.validator.address,
+      wallet: this.options.validator.payoutAddress,
       share: (this.options.validator.sharePercentage - licenseFeePercentage).toString(),
       reward: validatorFee,
+      power: "0",
       block: block.height
     });
 
@@ -24,6 +25,7 @@ export default class TbwEntityService {
       wallet: licenseFeeAddress,
       share: licenseFeePercentage.toString(),
       reward: licenseFee,
+      power: "0",
       block: block.height
     });
   }
