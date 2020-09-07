@@ -1,10 +1,8 @@
 import { Interfaces, Utils } from "@arkecosystem/crypto";
-import { Interfaces as StakeInterfaces } from "@nosplatform/stake-transactions-crypto";
 import { Container, State } from "@arkecosystem/core-interfaces";
 import BigNumber from "bignumber.js";
 
 export type ValidatorAttrs = State.IWalletDelegateAttributes;
-export type Stake = StakeInterfaces.IStakeObject;
 export type ParserType = Utils.BigNumber | BigNumber | string | number;
 
 export interface ITbw {
