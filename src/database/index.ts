@@ -1,6 +1,8 @@
 import tbwRepository from "./repositories/TBWRepository";
 import historyRepository from "./repositories/HistoryRepository";
 import TbwBase from "./models/TbwBase";
+import ForgeStats from "./models/Forge";
+import forgeStatsRepository from "./repositories/ForgeStatsRepository";
 
 export default class DB {
   private constructor() {}
@@ -16,5 +18,9 @@ export default class DB {
 
     await tbwBatch.commit();
     await historyBatch.commit();
+  }
+
+  static async addStats(stats: ForgeStats): Promise<void> {
+    await forgeStatsRepository.create(stats);
   }
 }

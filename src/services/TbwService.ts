@@ -1,4 +1,5 @@
 import { Database } from "@arkecosystem/core-interfaces";
+import { Utils } from "@arkecosystem/crypto";
 
 import db from "../database";
 import LoggerService from "./LoggerService";
@@ -6,6 +7,8 @@ import ContainerService from "./ContainerService";
 import { Block, Options, Plugins, Attributes, ValidatorAttrs } from "../types";
 import Parser from "../utils/parser";
 import TbwBase from "../database/models/TbwBase";
+import ForgeStats from "../database/models/Forge";
+import BigNumber from "bignumber.js";
 
 export default class TbwService {
   static async check(block: Block, options: Options) {
@@ -25,32 +28,52 @@ export default class TbwService {
 
     const totalVoteBalance = Parser.normalize(validatorAttrs.voteBalance);
     const totalBlockFee = Parser.normalize(block.totalFee.plus(block.reward));
+    const sharePercentage = new BigNumber(options.sharePercentage).div(100);
+    let totalPayout = new BigNumber(0);
 
     logger.info(`Calculating rewards for ${voters.length} voters on block ${block.height}`);
 
+    const TBWs: TbwBase[] = [];
+    const licenseFee = totalBlockFee.times(0.01); // 1% License Fee (ex: 100 block fee: 1 BIND)
+    const restReward = totalBlockFee.times(0.99); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
+    const votersReward = restReward.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
+    const validatorReward = restReward.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
+
     // Calculate reward for this block per voter
-    const votersRewards: TbwBase[] = [];
     for (const wallet of voters) {
-      let totalPower = wallet.balance;
+      let walletPower = Parser.normalize(wallet.balance);
 
       if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
-        const stakePower = wallet.getAttribute(Attributes.STAKEPOWER);
-        totalPower = totalPower.plus(stakePower);
+        const stakePower = wallet.getAttribute<Utils.BigNumber>(Attributes.STAKEPOWER);
+        walletPower = walletPower.plus(Parser.normalize(stakePower));
       }
 
-      const share = Parser.normalize(totalPower).div(totalVoteBalance);
-      const reward = share.times(totalBlockFee);
+      const share = Parser.normalize(walletPower).div(totalVoteBalance); // Calculuate Percentage owned of the 89,10 BIND pool (ex: 0,54%)
+      const voterReward = share.times(votersReward); // Calculate 0,54% of the 89,10 BIND -> 0,48114 BIND
 
-      votersRewards.push(
+      // TODO validate -> totalPayout should not exceed 89,10 BIND (+ 1%?)
+      totalPayout = totalPayout.plus(voterReward).plus(licenseFee);
+
+      // TODO refactor and keep track of wallet power per block
+      // TODO add 1 wallet to TBWs with license fee and 1 for validator fee
+      TBWs.push(
         new TbwBase({
           wallet: wallet.address,
           share: share.toString(),
-          reward: reward.toString(),
+          reward: voterReward.toString(),
           block: block.height
         })
       );
     }
 
-    db.addBatch(votersRewards);
+    // TODO refactor to reflect cuts
+    const forgeStats = new ForgeStats();
+    forgeStats.block = block.height;
+    forgeStats.numberOfVoters = voters.length;
+    forgeStats.payout = totalPayout.toString();
+    forgeStats.blockReward = totalBlockFee.toString();
+
+    db.addBatch(TBWs);
+    db.addStats(forgeStats);
   }
 }
