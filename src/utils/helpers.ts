@@ -17,6 +17,7 @@ export default class Helpers {
     return walletPower;
   };
 
+  // TODO add vote age
   // The method to determing the payout of the voter
   // This is seperate logic to allow for easy adjustments to the core payout logic
   public static calculatePayout(

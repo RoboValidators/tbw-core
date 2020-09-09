@@ -23,8 +23,8 @@ export default class TbwService {
       .allByAddress()
       .filter((wallet) => wallet.getAttribute<string>("vote") === options.validator.publicKey);
 
-    const filteredVoters = voters.filter((voter) => options.blacklist.includes(voter.address));
-    const blacklistVoters = voters.filter((voter) => !options.blacklist.includes(voter.address));
+    const filteredVoters = voters.filter((voter) => !options.blacklist.includes(voter.address));
+    const blacklistVoters = voters.filter((voter) => options.blacklist.includes(voter.address));
 
     const blacklistVoteBalance = blacklistVoters.reduce((acc, wallet) => {
       return acc.plus(Helpers.getWalletPower(wallet));
