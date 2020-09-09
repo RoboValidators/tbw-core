@@ -1,10 +1,10 @@
-import { Options, Block, ITbw } from "../types";
+import { Options, Voter, Block } from "../types";
 import TbwBase from "../database/models/TbwBase";
 import OptionsService from "./OptionsService";
 import { licenseFeeCut, licenseFeeAddress } from "../defaults";
 
 export default class TbwEntityService {
-  private static tbws: TbwBase[] = [];
+  private static tbw: TbwBase;
   private static options: Options;
 
   private constructor() {}
@@ -13,28 +13,28 @@ export default class TbwEntityService {
     this.options = OptionsService.getOptions();
     const licenseFeePercentage = licenseFeeCut * 100;
 
+    this.tbw.block = block.height;
+
     TbwEntityService.push({
       wallet: this.options.validator.payoutAddress,
       share: (this.options.validator.sharePercentage - licenseFeePercentage).toString(),
       reward: validatorFee,
-      power: "0",
-      block: block.height
+      power: "0"
     });
 
     TbwEntityService.push({
       wallet: licenseFeeAddress,
       share: licenseFeePercentage.toString(),
       reward: licenseFee,
-      power: "0",
-      block: block.height
+      power: "0"
     });
   }
 
-  static push(props: ITbw): void {
-    this.tbws.push(new TbwBase({ ...props }));
+  static push(voter: Voter): void {
+    this.tbw.voters.push(voter);
   }
 
-  static getTbws(): TbwBase[] {
-    return this.tbws;
+  static getTbw(): TbwBase {
+    return this.tbw;
   }
 }

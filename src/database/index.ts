@@ -7,17 +7,9 @@ import forgeStatsRepository from "./repositories/ForgeStatsRepository";
 export default class DB {
   private constructor() {}
 
-  static async addBatch(tbws: TbwBase[]): Promise<void> {
-    const tbwBatch = tbwRepository.createBatch();
-    const historyBatch = historyRepository.createBatch();
-
-    tbws.forEach((tbw) => {
-      tbwBatch.create(tbw);
-      historyBatch.create(tbw);
-    });
-
-    await tbwBatch.commit();
-    await historyBatch.commit();
+  static async addTbw(tbw: TbwBase): Promise<void> {
+    await tbwRepository.create(tbw);
+    await historyRepository.create(tbw);
   }
 
   static async addStats(stats: ForgeStats): Promise<void> {

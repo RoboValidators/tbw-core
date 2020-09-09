@@ -1,18 +1,12 @@
-import { ITbw } from "../../types";
+import { ITbw, Voter } from "../../types";
 
 export default class TbwBase {
   id: string;
-  wallet: string;
-  share: string;
-  reward: string;
   block: number;
-  power: string;
+  voters: Voter[];
 
   constructor(props: ITbw) {
-    this.wallet = props.wallet;
-    this.share = props.share;
-    this.reward = props.reward;
     this.block = props.block;
-    this.power = props.power;
+    this.voters = props.voters;
   }
 }

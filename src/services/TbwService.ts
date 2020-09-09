@@ -66,8 +66,7 @@ export default class TbwService {
         wallet: wallet.address,
         share: share.toString(),
         power: walletPower.toString(),
-        reward: voterReward.toString(),
-        block: block.height
+        reward: voterReward.toString()
       });
     }
 
@@ -82,7 +81,7 @@ export default class TbwService {
     forgeStats.power = totalVoteBalance.toString();
     forgeStats.blacklistedPower = blacklistVoteBalance.toString();
 
-    db.addBatch(TbwEntityService.getTbws());
+    db.addTbw(TbwEntityService.getTbw());
     db.addStats(forgeStats);
   }
 }

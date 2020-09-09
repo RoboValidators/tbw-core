@@ -6,10 +6,14 @@ export type ValidatorAttrs = State.IWalletDelegateAttributes;
 export type ParserType = Utils.BigNumber | BigNumber | string | number;
 
 export interface ITbw {
+  block: number;
+  voters: Voter[];
+}
+
+export interface Voter {
   wallet: string;
   share: string;
   reward: string;
-  block: number;
   power: string;
 }
 
