@@ -25,7 +25,7 @@ export default class Helpers {
     totalVoteBalance: BigNumber,
     votersRewards: BigNumber
   ) {
-    const share = Parser.normalize(walletPower).div(totalVoteBalance); // Calculuate Percentage owned of the 89,10 BIND pool (ex: 0,54%)
+    const share = walletPower.div(totalVoteBalance); // Calculuate Percentage owned of the 89,10 BIND pool (ex: 0,54%)
     const voterReward = share.times(votersRewards); // Calculate 0,54% of the 89,10 BIND -> 0,48114 BIND
 
     return {
