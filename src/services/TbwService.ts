@@ -1,5 +1,7 @@
 import { Database } from "@arkecosystem/core-interfaces";
+import { Managers } from "@arkecosystem/crypto";
 import BigNumber from "bignumber.js";
+import moment from "moment";
 
 import db from "../database";
 import LoggerService from "./LoggerService";
@@ -76,9 +78,13 @@ export default class TbwService {
         orderBy: "timestamp:desc"
       });
       logger.info(`=== WALLET ${wallet.address} last vote: `);
-      logger.info(votesByWallet.rows.shift());
-      logger.info(votesByWallet.rows.shift().timestamp);
-      logger.info(votesByWallet.rows.shift().asset);
+      const lastVote = votesByWallet.rows.shift();
+      logger.info(lastVote);
+      logger.info(lastVote.timestamp);
+      logger.info(lastVote.asset);
+      logger.info(
+        moment.unix(Managers.configManager.getMilestone().epoch).add(lastVote.timestamp, "seconds")
+      );
 
       totalVotersPayout = totalVotersPayout.plus(voterReward);
 
