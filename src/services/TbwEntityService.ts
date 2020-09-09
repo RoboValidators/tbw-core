@@ -1,12 +1,12 @@
 import { v4 as uuid } from "uuid";
 
 import { Options, Voter, Block } from "../types";
-import TbwBase from "../database/models/TbwBase";
 import OptionsService from "./OptionsService";
 import { licenseFeeCut, licenseFeeAddress } from "../defaults";
+import TrueBlockWeight from "../database/models/TrueBlockWeight";
 
 export default class TbwEntityService {
-  private tbw: TbwBase = new TbwBase();
+  private tbw = new TrueBlockWeight();
   private options: Options;
 
   constructor(licenseFee: string, validatorFee: string, block: Block) {
@@ -35,7 +35,7 @@ export default class TbwEntityService {
     this.tbw.voters.push(voter);
   }
 
-  getTbw(): TbwBase {
+  getTbw(): TrueBlockWeight {
     return this.tbw;
   }
 }

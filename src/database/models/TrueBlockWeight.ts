@@ -1,6 +1,14 @@
 import { Collection } from "fireorm";
 
-import TbwBase from "./TbwBase";
+import { Voter } from "../../types";
 
 @Collection("trueBlockWeight")
-export default class TrueBlockWeight extends TbwBase {}
+export default class TrueBlockWeight {
+  id: string;
+  block: number;
+  voters: Voter[];
+
+  constructor() {
+    this.voters = [];
+  }
+}
