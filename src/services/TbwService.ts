@@ -48,7 +48,11 @@ export default class TbwService {
     const votersRewards = restRewards.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
     const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
 
-    TbwEntityService.initialize(licenseFee.toString(), validatorFee.toString(), block);
+    const tbwEntityService = new TbwEntityService(
+      licenseFee.toString(),
+      validatorFee.toString(),
+      block
+    );
 
     logger.info(`=== LICENSE FEE ${licenseFee} ===`);
     logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
@@ -67,7 +71,7 @@ export default class TbwService {
 
       totalVotersPayout = totalVotersPayout.plus(voterReward);
 
-      TbwEntityService.push({
+      tbwEntityService.push({
         wallet: wallet.address,
         share: share.toString(),
         power: walletPower.toString(),
@@ -87,7 +91,7 @@ export default class TbwService {
     forgeStats.power = totalVoteBalance.toString();
     forgeStats.blacklistedPower = blacklistVoteBalance.toString();
 
-    db.addTbw(TbwEntityService.getTbw());
+    db.addTbw(tbwEntityService.getTbw());
     db.addStats(forgeStats);
   }
 }
