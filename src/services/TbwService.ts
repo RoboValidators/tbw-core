@@ -41,7 +41,7 @@ export default class TbwService {
     const sharePercentage = new BigNumber(options.validator.sharePercentage).div(100);
     let totalVotersPayout = new BigNumber(0);
 
-    logger.info(`Calculating rewards for ${voters.length} voters on block ${block.height}`);
+    logger.info(`=== Calculating rewards for ${voters.length} voters on block ${block.height} ===`);
 
     const licenseFee = totalBlockFee.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
     const restRewards = totalBlockFee.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
