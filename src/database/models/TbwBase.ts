@@ -4,4 +4,8 @@ export default class TbwBase {
   id: string;
   block: number;
   voters: Voter[];
+
+  constructor() {
+    this.voters = [];
+  }
 }
