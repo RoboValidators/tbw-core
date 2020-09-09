@@ -4,7 +4,7 @@ import OptionsService from "./OptionsService";
 import { licenseFeeCut, licenseFeeAddress } from "../defaults";
 
 export default class TbwEntityService {
-  private static tbw: TbwBase;
+  private static tbw: TbwBase = new TbwBase();
   private static options: Options;
 
   private constructor() {}
