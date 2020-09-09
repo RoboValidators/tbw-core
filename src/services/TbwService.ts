@@ -58,6 +58,8 @@ export default class TbwService {
     logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
     logger.info(`=== REWARDS TO DISTRIBUTE BETWEEN VOTERS ${votersRewards} ===`);
     logger.info(`=== VALIDATOR FEE ${validatorFee} ===`);
+    logger.info(`=== TOTAL VOTE POWER ${Parser.normalize(validatorAttrs.voteBalance)} ===`);
+    logger.info(`=== TOTAL POWER WITHOUT BLACKLIST ${totalVoteBalance} ===`);
 
     // Calculate reward for this block per voter
     for (const wallet of filteredVoters) {
@@ -70,6 +72,10 @@ export default class TbwService {
       );
 
       totalVotersPayout = totalVotersPayout.plus(voterReward);
+
+      logger.info(
+        `=== WALLET ${wallet.address} gets ${voterReward} for his ${share} share and ${walletPower} vote power ===`
+      );
 
       tbwEntityService.push({
         wallet: wallet.address,
