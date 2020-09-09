@@ -7,7 +7,9 @@ export default class ForgeStats {
   payout: string; // Payout to voters for this block
   blockReward: string; // Total rewards for this block
   numberOfVoters: number; // Amount of voters for this block
+  numberOfBlacklistedVoters: number; // Amount of voters blacklisted for this block
   licenseFee: string; // Fee for usage of the license for this block
   validatorFee: string; // Fee for the validator for this block
   power: string; // Total voting power of the validator for this block
+  blacklistedPower: string; // Total blacklisted voting power of the validator for this block
 }

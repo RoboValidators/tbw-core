@@ -71,15 +71,16 @@ export default class TbwService {
       });
     }
 
-    // TODO add blocklist statistics
     const forgeStats = new ForgeStats();
     forgeStats.block = block.height;
     forgeStats.numberOfVoters = voters.length;
-    forgeStats.power = totalVoteBalance.toString();
+    forgeStats.numberOfBlacklistedVoters = blacklistVoters.length;
     forgeStats.payout = totalVotersPayout.toString();
     forgeStats.licenseFee = licenseFee.toString();
     forgeStats.validatorFee = validatorFee.toString();
     forgeStats.blockReward = totalBlockFee.toString();
+    forgeStats.power = totalVoteBalance.toString();
+    forgeStats.blacklistedPower = blacklistVoteBalance.toString();
 
     db.addBatch(TbwEntityService.getTbws());
     db.addStats(forgeStats);
