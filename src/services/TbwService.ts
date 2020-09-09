@@ -50,6 +50,11 @@ export default class TbwService {
 
     TbwEntityService.initialize(licenseFee.toString(), validatorFee.toString(), block);
 
+    logger.info(`=== LICENSE FEE ${licenseFee} ===`);
+    logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
+    logger.info(`=== REWARDS TO DISTRIBUTE BETWEEN VOTERS ${votersRewards} ===`);
+    logger.info(`=== VALIDATOR FEE ${validatorFee} ===`);
+
     // Calculate reward for this block per voter
     for (const wallet of filteredVoters) {
       const walletPower = Helpers.getWalletPower(wallet);
@@ -70,6 +75,7 @@ export default class TbwService {
       });
     }
 
+    // TODO add in Tbw Entity
     const forgeStats = new ForgeStats();
     forgeStats.block = block.height;
     forgeStats.numberOfVoters = voters.length;

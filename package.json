@@ -36,7 +36,8 @@
     "firebase": "7.19.1",
     "firebase-admin": "9.1.1",
     "fireorm": "0.17.0",
-    "reflect-metadata": "0.1.13"
+    "reflect-metadata": "0.1.13",
+    "uuid": "8.3.0"
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "0.7.0",

@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import { Options, Voter, Block } from "../types";
 import TbwBase from "../database/models/TbwBase";
 import OptionsService from "./OptionsService";
@@ -13,6 +15,7 @@ export default class TbwEntityService {
     this.options = OptionsService.getOptions();
     const licenseFeePercentage = licenseFeeCut * 100;
 
+    this.tbw.id = uuid();
     this.tbw.block = block.height;
 
     TbwEntityService.push({
