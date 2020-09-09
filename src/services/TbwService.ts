@@ -17,6 +17,7 @@ export default class TbwService {
     const logger = LoggerService.getLogger();
     const dbService = ContainerService.resolve<Database.IDatabaseService>(Plugins.DATABASE);
     const walletManager = dbService.walletManager;
+    const txRepository = dbService.transactionsBusinessRepository;
 
     // Get all voters for validator
     const voters = walletManager
@@ -70,6 +71,14 @@ export default class TbwService {
         totalVoteBalance,
         votersRewards
       );
+
+      const votesByWallet = await txRepository.allVotesBySender(wallet.publicKey, {
+        orderBy: "timestamp:desc"
+      });
+      logger.info(`=== WALLET ${wallet.address} last vote: `);
+      logger.info(votesByWallet.rows.shift());
+      logger.info(votesByWallet.rows.shift().timestamp);
+      logger.info(votesByWallet.rows.shift().asset);
 
       totalVotersPayout = totalVotersPayout.plus(voterReward);
 
