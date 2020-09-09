@@ -1,5 +1,5 @@
 import { Database } from "@arkecosystem/core-interfaces";
-import { Utils } from "@arkecosystem/crypto";
+import BigNumber from "bignumber.js";
 
 import db from "../database";
 import LoggerService from "./LoggerService";
@@ -7,9 +7,9 @@ import ContainerService from "./ContainerService";
 import { Block, Options, Plugins, Attributes, ValidatorAttrs } from "../types";
 import Parser from "../utils/parser";
 import ForgeStats from "../database/models/Forge";
-import BigNumber from "bignumber.js";
 import TbwEntityService from "./TbwEntityService";
 import { licenseFeeCut } from "../defaults";
+import Helpers from "../utils/helpers";
 
 export default class TbwService {
   static async check(block: Block, options: Options) {
@@ -26,16 +26,8 @@ export default class TbwService {
     const filteredVoters = voters.filter((voter) => options.blacklist.includes(voter.address));
     const blacklistVoters = voters.filter((voter) => !options.blacklist.includes(voter.address));
 
-    // TODO abstract this logic (duplicate code);
     const blacklistVoteBalance = blacklistVoters.reduce((acc, wallet) => {
-      let walletPower = Parser.normalize(wallet.balance);
-
-      if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
-        const stakePower = wallet.getAttribute<Utils.BigNumber>(Attributes.STAKEPOWER);
-        walletPower = walletPower.plus(Parser.normalize(stakePower));
-      }
-
-      return acc.plus(walletPower);
+      return acc.plus(Helpers.getWalletPower(wallet));
     }, new BigNumber(0));
 
     // Get validator wallet, delegate attributes and calculate the total block fee
@@ -60,15 +52,13 @@ export default class TbwService {
 
     // Calculate reward for this block per voter
     for (const wallet of filteredVoters) {
-      let walletPower = Parser.normalize(wallet.balance);
+      const walletPower = Helpers.getWalletPower(wallet);
 
-      if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
-        const stakePower = wallet.getAttribute<Utils.BigNumber>(Attributes.STAKEPOWER);
-        walletPower = walletPower.plus(Parser.normalize(stakePower));
-      }
-
-      const share = Parser.normalize(walletPower).div(totalVoteBalance); // Calculuate Percentage owned of the 89,10 BIND pool (ex: 0,54%)
-      const voterReward = share.times(votersRewards); // Calculate 0,54% of the 89,10 BIND -> 0,48114 BIND
+      const { share, voterReward } = Helpers.calculatePayout(
+        walletPower,
+        totalVoteBalance,
+        votersRewards
+      );
 
       totalVotersPayout = totalVotersPayout.plus(voterReward);
 
