@@ -82,8 +82,14 @@ export default class TbwService {
       logger.info(lastVote);
       logger.info(lastVote.timestamp);
       logger.info(lastVote.asset);
+      logger.info(`Chain Epoch ${Managers.configManager.getMilestone().epoch}`);
+      logger.info(`Chain Epoch ${lastVote.timestamp}`);
       logger.info(
-        moment.unix(Managers.configManager.getMilestone().epoch).add(lastVote.timestamp, "seconds")
+        moment(
+          moment
+            .unix(Managers.configManager.getMilestone().epoch)
+            .add(lastVote.timestamp, "seconds")
+        )
       );
 
       totalVotersPayout = totalVotersPayout.plus(voterReward);
