@@ -48,7 +48,7 @@ export default class TbwService {
 
     const licenseFee = totalBlockFee.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
     const restRewards = totalBlockFee.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
-    const votersRewards = restRewards.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
+    // const votersRewards = restRewards.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
     // const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
 
     const tbwEntityService = new TbwEntityService(licenseFee.toString(), block);
@@ -61,7 +61,7 @@ export default class TbwService {
         wallet,
         walletPower,
         totalVoteBalance,
-        votersRewards,
+        restRewards,
         txRepository
       );
 
