@@ -104,7 +104,7 @@ export default class TbwService {
      */
     logger.info(`=== LICENSE FEE ${licenseFee} ===`);
     logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
-    logger.info(`=== REWARDS TO DISTRIBUTE BETWEEN VOTERS ${votersRewards} ===`);
+    logger.info(`=== REWARDS TO DISTRIBUTE BETWEEN VOTERS ${restRewards} ===`);
     logger.info(`=== VALIDATOR FEE ${validatorFee} ===`);
     logger.info(`=== VALIDATOR SHARE % ${validatorShare} ===`);
     logger.info(`=== TOTAL VOTE POWER ${Parser.normalize(validatorAttrs.voteBalance)} ===`);
