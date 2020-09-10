@@ -32,6 +32,7 @@ export default class Helpers {
   ) {
     const logger = LoggerService.getLogger();
     const options = OptionsService.getOptions();
+    const sharePercentage = new BigNumber(options.validator.sharePercentage).div(100);
 
     const votesByWallet = await txRepository.allVotesBySender(wallet.publicKey, {
       orderBy: "timestamp:desc"
@@ -58,13 +59,16 @@ export default class Helpers {
     const voteAge = moment.duration(moment().diff(voteMoment)).asDays();
     const voteAgePercentage = new BigNumber(100).div(options.voteStages).div(100); // 0,1438190824
 
-    if (options.voteAge !== 0 && voteAge < options.voteAge) {
-      const share = voteAgePercentage.times(voteAge);
-    }
+    let share = new BigNumber(0);
+    let voterReward = new BigNumber(0);
 
-    // TODO add share percentage logic
-    const share = walletPower.div(totalVoteBalance); // Calculuate Percentage owned of the 89,10 BIND pool (ex: 0,54%)
-    const voterReward = share.times(votersRewards); // Calculate 0,54% of the 89,10 BIND -> 0,48114 BIND
+    if (options.voteAge !== 0 && voteAge < options.voteAge) {
+      share = voteAgePercentage.times(voteAge);
+    } else {
+      // TODO add share percentage logic
+      share = walletPower.div(totalVoteBalance);
+      voterReward = share.times(votersRewards);
+    }
 
     return {
       share,

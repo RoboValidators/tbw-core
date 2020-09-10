@@ -48,8 +48,8 @@ export default class TbwService {
 
     const licenseFee = totalBlockFee.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
     const restRewards = totalBlockFee.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
-    // const votersRewards = restRewards.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
-    // const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
+    const votersRewards = restRewards.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
+    const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
 
     const tbwEntityService = new TbwEntityService(licenseFee.toString(), block);
 
@@ -61,7 +61,7 @@ export default class TbwService {
         wallet,
         walletPower,
         totalVoteBalance,
-        restRewards,
+        votersRewards,
         txRepository
       );
 
@@ -80,9 +80,12 @@ export default class TbwService {
       });
     }
 
-    const validatorFee = restRewards.minus(totalVotersPayout); // Get the rest of the rewards
-    const validatorShare = totalVotersPayout.div(restRewards); // Calculate rest percentage which the validator gets
-    tbwEntityService.addValidatorFee(validatorFee.toString(), validatorShare.toString());
+    const totalValidatorFee = votersRewards.minus(totalVotersPayout).plus(validatorFee); // Add the additional payout
+    const validatorShare = totalVotersPayout
+      .div(votersRewards)
+      .plus(new BigNumber(1).minus(sharePercentage)); // Calculate rest percentage which the validator gets
+
+    tbwEntityService.addValidatorFee(totalValidatorFee.toString(), validatorShare.toString());
 
     // TODO add in Tbw Entity
     const forgeStats = new ForgeStats();
@@ -91,7 +94,7 @@ export default class TbwService {
     forgeStats.numberOfBlacklistedVoters = blacklistVoters.length;
     forgeStats.payout = totalVotersPayout.toString();
     forgeStats.licenseFee = licenseFee.toString();
-    forgeStats.validatorFee = validatorFee.toString();
+    forgeStats.validatorFee = totalValidatorFee.toString();
     forgeStats.blockReward = totalBlockFee.toString();
     forgeStats.power = totalVoteBalance.toString();
     forgeStats.blacklistedPower = blacklistVoteBalance.toString();
@@ -105,7 +108,7 @@ export default class TbwService {
     logger.info(`=== LICENSE FEE ${licenseFee} ===`);
     logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
     logger.info(`=== TOTAL PAYOUT TO VOTERS ${totalVotersPayout.toString()} ===`);
-    logger.info(`=== VALIDATOR FEE ${validatorFee} ===`);
+    logger.info(`=== VALIDATOR FEE ${totalValidatorFee} ===`);
     logger.info(`=== VALIDATOR SHARE % ${validatorShare} ===`);
     logger.info(`=== TOTAL VOTE POWER ${Parser.normalize(validatorAttrs.voteBalance)} ===`);
     logger.info(`=== TOTAL POWER WITHOUT BLACKLIST ${totalVoteBalance} ===`);
