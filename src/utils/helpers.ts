@@ -44,16 +44,14 @@ export default class Helpers {
     const voteAge = moment.duration(moment().diff(voteMoment)).asDays();
     const voteAgePercentage = new BigNumber(100).div(options.voteStages).div(100); // 0,1438190824
 
-    let share = new BigNumber(0);
-    let voterReward = new BigNumber(0);
+    const fullShare = walletPower.div(totalVoteBalance);
 
-    if (options.voteAge !== 0 && voteAge < options.voteAge) {
-      share = voteAgePercentage.times(voteAge);
-      voterReward = share.times(votersRewards);
-    } else {
-      share = walletPower.div(totalVoteBalance);
-      voterReward = share.times(votersRewards);
-    }
+    const share =
+      options.voteAge !== 0 && voteAge < options.voteAge
+        ? voteAgePercentage.times(voteAge).times(fullShare)
+        : fullShare;
+
+    const voterReward = share.times(votersRewards);
 
     logger.info(`=== WALLET ${wallet.address} with vote age ${voteAge} ===`);
     logger.info(`gets ${voterReward} for his ${share} share and ${walletPower} vote power`);
