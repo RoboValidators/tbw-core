@@ -69,6 +69,8 @@ export default class TbwEntityService {
   print() {
     const logger = LoggerService.getLogger();
     logger.info(`********** BLOCK ${this.tbw.block} STATISTICS **********`);
-    console.table(this.tbw);
+    const { voters, ...rest } = this.tbw;
+    console.table(rest);
+    console.table(voters);
   }
 }
