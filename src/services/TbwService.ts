@@ -1,14 +1,11 @@
 import { Database } from "@arkecosystem/core-interfaces";
-import { Managers } from "@arkecosystem/crypto";
 import BigNumber from "bignumber.js";
-import moment from "moment";
 
 import db from "../database";
 import LoggerService from "./LoggerService";
 import ContainerService from "./ContainerService";
 import { Block, Options, Plugins, Attributes, ValidatorAttrs } from "../types";
 import Parser from "../utils/parser";
-import ForgeStats from "../database/models/Forge";
 import TbwEntityService from "./TbwEntityService";
 import { licenseFeeCut } from "../defaults";
 import Helpers from "../utils/helpers";
@@ -79,25 +76,25 @@ export default class TbwService {
     const validatorShare = totalValidatorFee.div(votersRewards);
 
     tbwEntityService.addValidatorFee(totalValidatorFee.toString(), validatorShare.toString());
-
-    // TODO add in Tbw Entity
-    const forgeStats = new ForgeStats();
-    forgeStats.block = block.height;
-    forgeStats.numberOfVoters = voters.length;
-    forgeStats.numberOfBlacklistedVoters = blacklistVoters.length;
-    forgeStats.payout = totalVotersPayout.toString();
-    forgeStats.licenseFee = licenseFee.toString();
-    forgeStats.validatorFee = totalValidatorFee.toString();
-    forgeStats.blockReward = totalBlockFee.toString();
-    forgeStats.power = totalVoteBalance.toString();
-    forgeStats.blacklistedPower = blacklistVoteBalance.toString();
+    tbwEntityService.addStatistics({
+      blockReward: totalBlockFee.toString(),
+      licenseFee: licenseFee.toString(),
+      validatorFee: totalValidatorFee.toString(),
+      votersReward: totalVotersPayout.toString(),
+      blacklistedPower: blacklistVoteBalance.toString(),
+      numberOfBlacklistedVoters: blacklistVoters.length,
+      numberOfVoters: voters.length,
+      totalPower: totalVoteBalance.toString()
+    });
 
     db.addTbw(tbwEntityService.getTbw());
-    db.addStats(forgeStats);
 
     /**
      * LOGGING STATISTICS
      */
+    tbwEntityService.print();
+
+    // TODO move logging stats
     logger.info(`=== LICENSE FEE ${licenseFee} ===`);
     logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
     logger.info(`=== TOTAL PAYOUT TO VOTERS ${totalVotersPayout.toString()} ===`);

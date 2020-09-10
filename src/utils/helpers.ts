@@ -53,8 +53,7 @@ export default class Helpers {
 
     const voterReward = share.times(votersRewards);
 
-    logger.info(`=== WALLET ${wallet.address} with vote age ${voteAge} ===`);
-    logger.info(`gets ${voterReward} for his ${share} share and ${walletPower} vote power`);
+    // TODO log vote stats
 
     return {
       share,
