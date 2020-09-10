@@ -76,9 +76,7 @@ export default class TbwService {
     }
 
     const totalValidatorFee = votersRewards.minus(totalVotersPayout).plus(validatorFee); // Add the additional payout
-    const validatorShare = totalVotersPayout
-      .div(votersRewards)
-      .plus(new BigNumber(1).minus(sharePercentage)); // Calculate rest percentage which the validator gets
+    const validatorShare = totalValidatorFee.div(votersRewards);
 
     tbwEntityService.addValidatorFee(totalValidatorFee.toString(), validatorShare.toString());
 
