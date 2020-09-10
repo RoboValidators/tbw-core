@@ -49,43 +49,20 @@ export default class TbwService {
     const licenseFee = totalBlockFee.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
     const restRewards = totalBlockFee.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
     const votersRewards = restRewards.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
-    const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
+    // const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
 
-    const tbwEntityService = new TbwEntityService(
-      licenseFee.toString(),
-      validatorFee.toString(),
-      block
-    );
-
-    logger.info(`=== LICENSE FEE ${licenseFee} ===`);
-    logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
-    logger.info(`=== REWARDS TO DISTRIBUTE BETWEEN VOTERS ${votersRewards} ===`);
-    logger.info(`=== VALIDATOR FEE ${validatorFee} ===`);
-    logger.info(`=== TOTAL VOTE POWER ${Parser.normalize(validatorAttrs.voteBalance)} ===`);
-    logger.info(`=== TOTAL POWER WITHOUT BLACKLIST ${totalVoteBalance} ===`);
+    const tbwEntityService = new TbwEntityService(licenseFee.toString(), block);
 
     // Calculate reward for this block per voter
     for (const wallet of filteredVoters) {
       const walletPower = Helpers.getWalletPower(wallet);
 
-      const { share, voterReward } = Helpers.calculatePayout(
+      const { share, voterReward } = await Helpers.calculatePayout(
+        wallet,
         walletPower,
         totalVoteBalance,
-        votersRewards
-      );
-
-      const votesByWallet = await txRepository.allVotesBySender(wallet.publicKey, {
-        orderBy: "timestamp:desc"
-      });
-      logger.info(`=== WALLET ${wallet.address} last vote: `);
-      const lastVote = votesByWallet.rows.shift();
-      logger.info(lastVote);
-      logger.info(lastVote.timestamp);
-      logger.info(lastVote.asset);
-      logger.info(`Chain Epoch ${Managers.configManager.getMilestone().epoch}`);
-      logger.info(`Chain Epoch ${lastVote.timestamp}`);
-      logger.info(
-        moment(Managers.configManager.getMilestone().epoch).add(lastVote.timestamp, "seconds")
+        votersRewards,
+        txRepository
       );
 
       totalVotersPayout = totalVotersPayout.plus(voterReward);
@@ -94,6 +71,7 @@ export default class TbwService {
         `=== WALLET ${wallet.address} gets ${voterReward} for his ${share} share and ${walletPower} vote power ===`
       );
 
+      // VALIDATOR GETS BLOCK REWARD - TOTALPAYOUT (because of vote age mechanism)
       tbwEntityService.push({
         wallet: wallet.address,
         share: share.toString(),
@@ -101,6 +79,10 @@ export default class TbwService {
         reward: voterReward.toString()
       });
     }
+
+    const validatorFee = totalVotersPayout.minus(totalBlockFee); // Get the rest of the rewards
+    const validatorShare = totalVotersPayout.div(totalBlockFee); // Calculate rest percentage which the validator gets
+    tbwEntityService.addValidatorFee(validatorFee.toString(), validatorShare.toString());
 
     // TODO add in Tbw Entity
     const forgeStats = new ForgeStats();
@@ -116,5 +98,16 @@ export default class TbwService {
 
     db.addTbw(tbwEntityService.getTbw());
     db.addStats(forgeStats);
+
+    /**
+     * LOGGING STATISTICS
+     */
+    logger.info(`=== LICENSE FEE ${licenseFee} ===`);
+    logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
+    logger.info(`=== REWARDS TO DISTRIBUTE BETWEEN VOTERS ${votersRewards} ===`);
+    logger.info(`=== VALIDATOR FEE ${validatorFee} ===`);
+    logger.info(`=== VALIDATOR SHARE % ${validatorShare} ===`);
+    logger.info(`=== TOTAL VOTE POWER ${Parser.normalize(validatorAttrs.voteBalance)} ===`);
+    logger.info(`=== TOTAL POWER WITHOUT BLACKLIST ${totalVoteBalance} ===`);
   }
 }

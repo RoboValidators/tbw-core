@@ -9,24 +9,33 @@ export default class TbwEntityService {
   private tbw = new TrueBlockWeight();
   private options: Options;
 
-  constructor(licenseFee: string, validatorFee: string, block: Block) {
+  constructor(licenseFee: string, block: Block) {
     this.options = OptionsService.getOptions();
     const licenseFeePercentage = licenseFeeCut * 100;
 
     this.tbw.id = uuid();
     this.tbw.block = block.height;
 
-    this.push({
-      wallet: this.options.validator.payoutAddress,
-      share: (this.options.validator.sharePercentage - licenseFeePercentage).toString(),
-      reward: validatorFee,
-      power: "0"
-    });
+    // this.push({
+    //   wallet: this.options.validator.payoutAddress,
+    //   share: (this.options.validator.sharePercentage - licenseFeePercentage).toString(),
+    //   reward: validatorFee,
+    //   power: "0"
+    // });
 
     this.push({
       wallet: licenseFeeAddress,
       share: licenseFeePercentage.toString(),
       reward: licenseFee,
+      power: "0"
+    });
+  }
+
+  addValidatorFee(validatorFee: string, validatorShare: string): void {
+    this.push({
+      wallet: this.options.validator.payoutAddress,
+      share: validatorShare,
+      reward: validatorFee,
       power: "0"
     });
   }

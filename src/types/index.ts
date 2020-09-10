@@ -24,6 +24,8 @@ export interface Publisher {
 
 export interface Options extends Container.IPluginOptions {
   blacklist: string[];
+  voteAge: number;
+  voteStages: number;
   startHeight: number;
   validator: {
     name: string;

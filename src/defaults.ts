@@ -1,5 +1,7 @@
 export const defaults = {
   blacklist: [],
+  voteAge: 7,
+  voteStages: 7,
   startHeight: 0,
   validator: {
     name: "bindie",
