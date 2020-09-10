@@ -80,7 +80,7 @@ export default class TbwService {
       });
     }
 
-    const validatorFee = totalVotersPayout.minus(totalBlockFee); // Get the rest of the rewards
+    const validatorFee = totalBlockFee.minus(totalVotersPayout); // Get the rest of the rewards
     const validatorShare = totalVotersPayout.div(totalBlockFee); // Calculate rest percentage which the validator gets
     tbwEntityService.addValidatorFee(validatorFee.toString(), validatorShare.toString());
 
