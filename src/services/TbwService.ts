@@ -21,68 +21,69 @@ export default class TbwService {
       .allByAddress()
       .filter((wallet) => wallet.getAttribute<string>("vote") === options.validator.publicKey);
 
+    // Get list of voters and blacklisted voters
     const filteredVoters = voters.filter((voter) => !options.blacklist.includes(voter.address));
-    const blacklistVoters = voters.filter((voter) => options.blacklist.includes(voter.address));
+    const blacklistedVoters = voters.filter((voter) => options.blacklist.includes(voter.address));
 
-    const blacklistVoteBalance = blacklistVoters.reduce((acc, wallet) => {
+    // Calculate voting power of the blacklisted wallets
+    const blacklistedVotePower = blacklistedVoters.reduce((acc, wallet) => {
       return acc.plus(Helpers.getWalletPower(wallet));
     }, new BigNumber(0));
 
-    // Get validator wallet, delegate attributes and calculate the total block fee
+    // Get validator wallet and attributes
     const validatorWallet = walletManager.findByPublicKey(options.validator.publicKey);
     const validatorAttrs = validatorWallet.getAttribute<ValidatorAttrs>(Attributes.VALIDATOR);
 
-    const totalVoteBalance = Parser.normalize(validatorAttrs.voteBalance).minus(
-      blacklistVoteBalance
-    );
-    const totalBlockFee = Parser.normalize(block.totalFee.plus(block.reward));
+    const totalVotePower = Parser.normalize(validatorAttrs.voteBalance).minus(blacklistedVotePower);
+    const blockReward = Parser.normalize(block.totalFee.plus(block.reward));
     const sharePercentage = new BigNumber(options.validator.sharePercentage).div(100);
     let totalVotersPayout = new BigNumber(0);
 
-    const licenseFee = totalBlockFee.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
-    const restRewards = totalBlockFee.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
+    const licenseFee = blockReward.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
+    const restRewards = blockReward.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
     const votersRewards = restRewards.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
     const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
 
+    // Initialize TBW Entity with prefilled license fee and block height
     const tbwEntityService = new TbwEntityService(licenseFee.toString(), block);
 
-    // Calculate reward for this block per voter
+    // Calculate reward per wallet for this block
     for (const wallet of filteredVoters) {
-      const walletPower = Helpers.getWalletPower(wallet);
-
-      const { share, voterReward } = await Helpers.calculatePayout(
+      const { share, power, reward } = await Helpers.calculatePayout(
         wallet,
-        walletPower,
-        totalVoteBalance,
+        totalVotePower,
         votersRewards,
         txRepository
       );
 
-      totalVotersPayout = totalVotersPayout.plus(voterReward);
+      totalVotersPayout = totalVotersPayout.plus(reward);
 
       tbwEntityService.push({
         wallet: wallet.address,
-        share: share.toString(),
-        power: walletPower.toString(),
-        reward: voterReward.toString()
+        share,
+        power,
+        reward
       });
     }
 
+    // Calculate rest reward (due to vote age) and add the validator fee
     const totalValidatorFee = votersRewards.minus(totalVotersPayout).plus(validatorFee);
+    // Calculate true validator share
     const validatorShare = totalValidatorFee.div(votersRewards);
 
     tbwEntityService.addValidatorFee(totalValidatorFee.toString(), validatorShare.toString());
     tbwEntityService.addStatistics({
-      blockReward: totalBlockFee.toString(),
+      blockReward: blockReward.toString(), // Reward share statistics
       licenseFee: licenseFee.toString(),
       validatorFee: totalValidatorFee.toString(),
       votersReward: totalVotersPayout.toString(),
-      blacklistedPower: blacklistVoteBalance.toString(),
-      numberOfBlacklistedVoters: blacklistVoters.length,
-      numberOfVoters: voters.length,
-      totalPower: totalVoteBalance.toString()
+      numberOfVoters: voters.length, // Voter and blacklist statistics
+      numberOfBlacklistedVoters: blacklistedVoters.length,
+      totalPower: totalVotePower.toString(),
+      blacklistedPower: blacklistedVotePower.toString()
     });
 
+    // Persist data to database
     db.addTbw(tbwEntityService.getTbw());
 
     // Print Statistics
