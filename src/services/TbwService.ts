@@ -2,7 +2,6 @@ import { Database } from "@arkecosystem/core-interfaces";
 import BigNumber from "bignumber.js";
 
 import db from "../database";
-import LoggerService from "./LoggerService";
 import ContainerService from "./ContainerService";
 import { Block, Options, Plugins, Attributes, ValidatorAttrs } from "../types";
 import Parser from "../utils/parser";
@@ -13,7 +12,6 @@ import Helpers from "../utils/helpers";
 export default class TbwService {
   static async check(block: Block, options: Options) {
     // Setup services
-    const logger = LoggerService.getLogger();
     const dbService = ContainerService.resolve<Database.IDatabaseService>(Plugins.DATABASE);
     const walletManager = dbService.walletManager;
     const txRepository = dbService.transactionsBusinessRepository;
@@ -40,8 +38,6 @@ export default class TbwService {
     const totalBlockFee = Parser.normalize(block.totalFee.plus(block.reward));
     const sharePercentage = new BigNumber(options.validator.sharePercentage).div(100);
     let totalVotersPayout = new BigNumber(0);
-
-    logger.info(`=== Calculating rewards for ${voters.length} voters on block ${block.height} ===`);
 
     const licenseFee = totalBlockFee.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
     const restRewards = totalBlockFee.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
@@ -72,7 +68,7 @@ export default class TbwService {
       });
     }
 
-    const totalValidatorFee = votersRewards.minus(totalVotersPayout).plus(validatorFee); // Add the additional payout
+    const totalValidatorFee = votersRewards.minus(totalVotersPayout).plus(validatorFee);
     const validatorShare = totalValidatorFee.div(votersRewards);
 
     tbwEntityService.addValidatorFee(totalValidatorFee.toString(), validatorShare.toString());
@@ -89,18 +85,7 @@ export default class TbwService {
 
     db.addTbw(tbwEntityService.getTbw());
 
-    /**
-     * LOGGING STATISTICS
-     */
+    // Print Statistics
     tbwEntityService.print();
-
-    // TODO move logging stats
-    logger.info(`=== LICENSE FEE ${licenseFee} ===`);
-    logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
-    logger.info(`=== TOTAL PAYOUT TO VOTERS ${totalVotersPayout.toString()} ===`);
-    logger.info(`=== VALIDATOR FEE ${totalValidatorFee} ===`);
-    logger.info(`=== VALIDATOR SHARE % ${validatorShare} ===`);
-    logger.info(`=== TOTAL VOTE POWER ${Parser.normalize(validatorAttrs.voteBalance)} ===`);
-    logger.info(`=== TOTAL POWER WITHOUT BLACKLIST ${totalVoteBalance} ===`);
   }
 }

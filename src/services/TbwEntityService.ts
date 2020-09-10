@@ -4,7 +4,6 @@ import { Options, Voter, Block } from "../types";
 import OptionsService from "./OptionsService";
 import { licenseFeeCut, licenseFeeAddress } from "../defaults";
 import TrueBlockWeight from "../database/models/TrueBlockWeight";
-import LoggerService from "./LoggerService";
 
 export default class TbwEntityService {
   private tbw = new TrueBlockWeight();
@@ -12,7 +11,6 @@ export default class TbwEntityService {
 
   constructor(licenseFee: string, block: Block) {
     this.options = OptionsService.getOptions();
-    const licenseFeePercentage = licenseFeeCut * 100;
 
     this.tbw.id = uuid();
     this.tbw.block = block.height;
@@ -20,7 +18,7 @@ export default class TbwEntityService {
     // Add license fee entry
     this.push({
       wallet: licenseFeeAddress,
-      share: licenseFeePercentage.toString(),
+      share: licenseFeeCut.toString(),
       reward: licenseFee,
       power: "0"
     });
@@ -67,8 +65,6 @@ export default class TbwEntityService {
   }
 
   print() {
-    const logger = LoggerService.getLogger();
-    logger.info(`********** BLOCK ${this.tbw.block} STATISTICS **********`);
     const { voters, ...rest } = this.tbw;
     console.table(rest);
     console.table(voters);
