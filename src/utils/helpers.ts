@@ -62,6 +62,7 @@ export default class Helpers {
       const share = voteAgePercentage.times(voteAge);
     }
 
+    // TODO add share percentage logic
     const share = walletPower.div(totalVoteBalance); // Calculuate Percentage owned of the 89,10 BIND pool (ex: 0,54%)
     const voterReward = share.times(votersRewards); // Calculate 0,54% of the 89,10 BIND -> 0,48114 BIND
 

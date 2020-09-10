@@ -80,8 +80,8 @@ export default class TbwService {
       });
     }
 
-    const validatorFee = totalBlockFee.minus(totalVotersPayout); // Get the rest of the rewards
-    const validatorShare = totalVotersPayout.div(totalBlockFee); // Calculate rest percentage which the validator gets
+    const validatorFee = restRewards.minus(totalVotersPayout); // Get the rest of the rewards
+    const validatorShare = totalVotersPayout.div(restRewards); // Calculate rest percentage which the validator gets
     tbwEntityService.addValidatorFee(validatorFee.toString(), validatorShare.toString());
 
     // TODO add in Tbw Entity
@@ -104,7 +104,7 @@ export default class TbwService {
      */
     logger.info(`=== LICENSE FEE ${licenseFee} ===`);
     logger.info(`=== REWARDS AFTER FEE ${restRewards} ===`);
-    logger.info(`=== REWARDS TO DISTRIBUTE BETWEEN VOTERS ${restRewards} ===`);
+    logger.info(`=== TOTAL PAYOUT TO VOTERS ${totalVotersPayout.toString()} ===`);
     logger.info(`=== VALIDATOR FEE ${validatorFee} ===`);
     logger.info(`=== VALIDATOR SHARE % ${validatorShare} ===`);
     logger.info(`=== TOTAL VOTE POWER ${Parser.normalize(validatorAttrs.voteBalance)} ===`);
