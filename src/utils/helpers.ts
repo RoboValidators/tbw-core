@@ -20,7 +20,6 @@ export default class Helpers {
     return walletPower;
   };
 
-  // TODO add vote age
   // The method to determing the payout of the voter
   // This is seperate logic to allow for easy adjustments to the core payout logic
   public static async calculatePayout(
@@ -32,25 +31,11 @@ export default class Helpers {
   ) {
     const logger = LoggerService.getLogger();
     const options = OptionsService.getOptions();
-    const sharePercentage = new BigNumber(options.validator.sharePercentage).div(100);
-
     const votesByWallet = await txRepository.allVotesBySender(wallet.publicKey, {
       orderBy: "timestamp:desc"
     });
 
-    logger.info(`=== WALLET ${wallet.address} last vote: `);
-
     const lastVote = votesByWallet.rows.shift();
-
-    logger.info(lastVote);
-    logger.info(lastVote.timestamp);
-    logger.info(lastVote.asset);
-    logger.info(`Chain Epoch ${Managers.configManager.getMilestone().epoch}`);
-    logger.info(`Chain Epoch ${lastVote.timestamp}`);
-    logger.info(
-      moment(Managers.configManager.getMilestone().epoch).add(lastVote.timestamp, "seconds")
-    );
-
     const voteMoment = moment(Managers.configManager.getMilestone().epoch).add(
       lastVote.timestamp,
       "seconds"
@@ -64,11 +49,14 @@ export default class Helpers {
 
     if (options.voteAge !== 0 && voteAge < options.voteAge) {
       share = voteAgePercentage.times(voteAge);
+      voterReward = share.times(votersRewards);
     } else {
-      // TODO add share percentage logic
       share = walletPower.div(totalVoteBalance);
       voterReward = share.times(votersRewards);
     }
+
+    logger.info(`=== WALLET ${wallet.address} with vote age ${voteAge} ===`);
+    logger.info(`gets ${voterReward} for his ${share} share and ${walletPower} vote power`);
 
     return {
       share,

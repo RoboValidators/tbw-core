@@ -67,11 +67,6 @@ export default class TbwService {
 
       totalVotersPayout = totalVotersPayout.plus(voterReward);
 
-      logger.info(
-        `=== WALLET ${wallet.address} gets ${voterReward} for his ${share} share and ${walletPower} vote power ===`
-      );
-
-      // VALIDATOR GETS BLOCK REWARD - TOTALPAYOUT (because of vote age mechanism)
       tbwEntityService.push({
         wallet: wallet.address,
         share: share.toString(),
