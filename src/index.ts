@@ -1,18 +1,18 @@
-// https://github.com/yagop/node-telegram-bot-api/issues/319#issuecomment-324963294
-process.env.NTBA_FIX_319 = "1";
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "firebase/firestore";
 import * as fireorm from "fireorm";
-import admin from "firebase-admin";
+import admin, { ServiceAccount } from "firebase-admin";
 
 import serviceAccount from "../serviceAccountKey.json";
+import { alias } from "./defaults";
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as any),
-  databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
-});
+const tbwFirebase = admin.initializeApp(
+  {
+    credential: admin.credential.cert(serviceAccount as ServiceAccount),
+    databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
+  },
+  alias
+);
 
-fireorm.initialize(admin.firestore());
+fireorm.initialize(tbwFirebase.firestore());
 
 export * from "./plugin";
