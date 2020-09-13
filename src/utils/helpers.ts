@@ -50,7 +50,10 @@ export default class Helpers {
 
     // Determine voting age in days and derive a votinge percentage based on it
     const voteAge = moment.duration(moment().diff(voteMoment)).asDays();
-    const voteAgePercentage = new BigNumber(100).div(options.voteStages).div(100);
+    const voteAgePercentage =
+      options.voteStages === 0
+        ? new BigNumber(1)
+        : new BigNumber(100).div(options.voteStages).div(100);
 
     // Determine true block weight share of the wallet
     const fullShare = walletPower.div(totalVoteBalance);
