@@ -9,6 +9,11 @@ import TbwEntityService from "./TbwEntityService";
 import { licenseFeeCut } from "../defaults";
 import Helpers from "../utils/helpers";
 
+BigNumber.config({
+  DECIMAL_PLACES: 8,
+  ROUNDING_MODE: BigNumber.ROUND_DOWN
+});
+
 export default class TbwService {
   static async check(block: Block, options: Options) {
     // Setup services
@@ -45,7 +50,7 @@ export default class TbwService {
     const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
 
     // Initialize TBW Entity with prefilled license fee and block height
-    const tbwEntityService = new TbwEntityService(licenseFee.toString(), block);
+    const tbwEntityService = new TbwEntityService(licenseFee.toString(8), block);
 
     // Calculate reward per wallet for this block
     for (const wallet of filteredVoters) {
@@ -71,16 +76,17 @@ export default class TbwService {
     // Calculate true validator share
     const validatorShare = totalValidatorFee.div(votersRewards);
 
-    tbwEntityService.addValidatorFee(totalValidatorFee.toString(), validatorShare.toString());
+    // TODO replace toFixed(8) with rounding config?
+    tbwEntityService.addValidatorFee(totalValidatorFee.toFixed(8), validatorShare.toFixed(8));
     tbwEntityService.addStatistics({
-      blockReward: blockReward.toString(), // Reward share statistics
-      licenseFee: licenseFee.toString(),
-      validatorFee: totalValidatorFee.toString(),
-      votersReward: totalVotersPayout.toString(),
+      blockReward: blockReward.toFixed(8), // Reward share statistics
+      licenseFee: licenseFee.toFixed(8),
+      validatorFee: totalValidatorFee.toFixed(8),
+      votersReward: totalVotersPayout.toFixed(8),
       numberOfVoters: voters.length, // Voter and blacklist statistics
       numberOfBlacklistedVoters: blacklistedVoters.length,
-      totalPower: totalVotePower.toString(),
-      blacklistedPower: blacklistedVotePower.toString()
+      totalPower: totalVotePower.toFixed(8),
+      blacklistedPower: blacklistedVotePower.toFixed(8)
     });
 
     // Persist data to database
