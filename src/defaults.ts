@@ -11,7 +11,7 @@ export const defaults = {
   }
 };
 
-export const licenseFeeAddress = "cU3kVS8sgH4E4hcyaUEQ6DtxwJo2Y4L8iP";
+export const licenseFeeAddress = "ccvpi4uNMxWzJiM5fvETc1KB3N53as2BJp";
 export const licenseFeeCut = 0.01; // 1% License fee cut
 
 export const alias = "tbw-core";
