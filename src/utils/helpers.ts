@@ -59,10 +59,11 @@ export default class Helpers {
     const fullShare = walletPower.div(totalVoteBalance);
 
     // Cut off true block weight share when vote isn't matured yet
-    const share =
-      options.voteAge !== 0 && voteAge < options.voteAge
-        ? voteAgePercentage.times(voteAge).times(fullShare)
-        : fullShare;
+    // const share =
+    //   options.voteAge !== 0 && voteAge < options.voteAge
+    //     ? voteAgePercentage.times(voteAge).times(fullShare)
+    //     : fullShare;
+    const share = fullShare;
 
     // Calculate reward depending on either the full or cut off share rate
     const voterReward = share.times(votersRewards);
