@@ -7,6 +7,11 @@ import { Attributes } from "../types";
 import Parser from "./parser";
 import OptionsService from "../services/OptionsService";
 
+BigNumber.config({
+  DECIMAL_PLACES: 8,
+  ROUNDING_MODE: BigNumber.ROUND_DOWN
+});
+
 export default class Helpers {
   public static getWalletPower(wallet: State.IWallet) {
     let walletPower = Parser.normalize(wallet.balance);
@@ -60,9 +65,9 @@ export default class Helpers {
     const voterReward = share.times(votersRewards);
 
     return {
-      share: share.toFixed(8),
-      power: walletPower.toFixed(8),
-      reward: voterReward.toFixed(8)
+      share: share.toString(),
+      power: walletPower.toString(),
+      reward: voterReward.toString()
     };
   }
 }
