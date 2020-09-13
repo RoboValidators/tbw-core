@@ -28,6 +28,8 @@ module.exports = {
     // Any other plugins ..
     "@robovalidators/tbw-core": {
         blacklist: [], // The voters who should be blacklisted from the calculations
+        voteAge: 7, // The vote age required to get rewards
+        voteStages: 7, // The vote stages to spread the vote age over (ex: day 1: 100% / stages * days)
         startHeight: 0, // Heigh to start from
         validator: {
             name: "bindie", // Your validator name
