@@ -65,9 +65,9 @@ export default class Helpers {
     const voterReward = share.times(votersRewards);
 
     return {
-      share: share.toString(),
-      power: walletPower.toString(),
-      reward: voterReward.toString()
+      share: share.toFixed(8),
+      power: walletPower.toFixed(8),
+      reward: voterReward.toFixed(8)
     };
   }
 }
