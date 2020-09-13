@@ -50,7 +50,7 @@ export default class TbwService {
     const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
 
     // Initialize TBW Entity with prefilled license fee and block height
-    const tbwEntityService = new TbwEntityService(licenseFee.toString(8), block);
+    const tbwEntityService = new TbwEntityService(licenseFee.toFixed(8), block);
 
     // Calculate reward per wallet for this block
     for (const wallet of filteredVoters) {
