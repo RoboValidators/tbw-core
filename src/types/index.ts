@@ -15,6 +15,7 @@ export interface Voter {
   share: string;
   reward: string;
   power: string;
+  fullShare: string;
 }
 
 export interface Publisher {
@@ -26,6 +27,7 @@ export interface Options extends Container.IPluginOptions {
   blacklist: string[];
   voteAge: number;
   voteStages: number;
+  minPercentage: number;
   startHeight: number;
   validator: {
     name: string;

@@ -54,20 +54,21 @@ export default class TbwService {
 
     // Calculate reward per wallet for this block
     for (const wallet of filteredVoters) {
-      const { share, power, reward } = await Helpers.calculatePayout(
+      const result = await Helpers.calculatePayout(
         wallet,
         totalVotePower,
         votersRewards,
         txRepository
       );
 
-      totalVotersPayout = totalVotersPayout.plus(reward);
+      totalVotersPayout = totalVotersPayout.plus(result.reward);
 
       tbwEntityService.push({
         wallet: wallet.address,
-        share,
-        power,
-        reward
+        share: result.share,
+        power: result.power,
+        reward: result.reward,
+        fullShare: result.fullShare
       });
     }
 

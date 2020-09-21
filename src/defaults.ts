@@ -2,6 +2,7 @@ export const defaults = {
   blacklist: [],
   voteAge: 7,
   voteStages: 7,
+  minPercentage: 80,
   startHeight: 0,
   validator: {
     name: "bindie",
