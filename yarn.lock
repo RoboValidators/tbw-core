@@ -3102,10 +3102,10 @@ firebase@7.21.0:
     "@firebase/storage" "0.3.43"
     "@firebase/util" "0.3.2"
 
-fireorm@0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/fireorm/-/fireorm-0.17.0.tgz#586789b60ddbebe1b9d4c973af5b1eb7ab70a4fa"
-  integrity sha512-EB9wOuMOoiQ/Iw7qpopEMO0L1FPucdYb7iLwgFRPiTvTuA3OFsBsZ2knSNLpjPBS3syBPFMFI87xczq1aZmYGg==
+fireorm@0.17.1:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/fireorm/-/fireorm-0.17.1.tgz#a41ada4774401a7b37f63453d94d1565ea03c83e"
+  integrity sha512-k+alC/U1Xzmchgsdsn38XqcM2TOrWO/fMPL8W2sCEgf0HgwqdyoTix7B1e0PhhrPr3EmSd7WZLiqvQfeWII/lA==
   dependencies:
     class-transformer "^0.2.0"
     pluralize "^8.0.0"
