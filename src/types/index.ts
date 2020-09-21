@@ -12,10 +12,11 @@ export interface ITbw {
 
 export interface Voter {
   wallet: string;
-  share: string;
   reward: string;
-  power?: string;
-  fullShare?: string;
+  power: string;
+  share: string;
+  fullShare: string;
+  voteAge: number;
 }
 
 export interface Publisher {

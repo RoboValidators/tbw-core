@@ -68,7 +68,8 @@ export default class TbwService {
         share: result.share,
         power: result.power,
         reward: result.reward,
-        fullShare: result.fullShare
+        fullShare: result.fullShare,
+        voteAge: result.voteAge
       });
     }
 

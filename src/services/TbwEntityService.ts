@@ -19,7 +19,10 @@ export default class TbwEntityService {
     this.push({
       wallet: licenseFeeAddress,
       share: licenseFeeCut.toString(),
-      reward: licenseFee
+      fullShare: licenseFeeCut.toString(),
+      reward: licenseFee,
+      power: "0",
+      voteAge: 0
     });
   }
 
@@ -28,7 +31,10 @@ export default class TbwEntityService {
     this.push({
       wallet: this.options.validator.payoutAddress,
       share: validatorShare,
-      reward: validatorFee
+      fullShare: validatorShare,
+      reward: validatorFee,
+      power: "0",
+      voteAge: 0
     });
   }
 

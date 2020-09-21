@@ -76,7 +76,8 @@ export default class Helpers {
       fullShare: fullShare.times(100).toFixed(8), // Parse to percentages
       share: share.times(100).toFixed(8), // Parse to percentages
       power: walletPower.toFixed(8),
-      reward: voterReward.toFixed(8)
+      reward: voterReward.toFixed(8),
+      voteAge
     };
   }
 }
