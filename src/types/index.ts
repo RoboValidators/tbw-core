@@ -16,7 +16,8 @@ export interface Voter {
   power: string;
   share: string;
   fullShare: string;
-  voteAge: number;
+  sharePercentage: string;
+  voteAge: string;
 }
 
 export interface Publisher {

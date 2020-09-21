@@ -51,10 +51,10 @@ export default class Helpers {
     // Determine voting age in days and derive a votinge percentage based on it
     const voteAge = moment.duration(moment().diff(voteMoment)).asDays();
 
-    const minPercentage = new BigNumber(options.minPercentage).div(100);
+    const minPercentage = new BigNumber(options.minPercentage).div(100) || 0;
     const percentageIncrease = new BigNumber(100)
       .minus(options.minPercentage)
-      .div(options.voteStages)
+      .div(options.voteStages === 0 ? 1 : options.voteStages)
       .div(100);
 
     const voteAgePercentage = percentageIncrease.times(voteAge).plus(minPercentage);
@@ -63,21 +63,17 @@ export default class Helpers {
     const fullShare = walletPower.div(totalVoteBalance);
 
     // Cut off true block weight share when vote isn't matured yet
-    const share =
-      options.voteAge !== 0 && voteAge < options.voteAge
-        ? voteAgePercentage.times(fullShare)
-        : fullShare;
+    const share = voteAge < options.voteAge ? voteAgePercentage.times(fullShare) : fullShare;
 
     // Calculate reward depending on either the full or cut off share rate
     const voterReward = share.times(votersRewards);
 
-    // TODO determine percentage cut for this block?
     return {
       fullShare: fullShare.times(100).toFixed(8), // Parse to percentages
       share: share.times(100).toFixed(8), // Parse to percentages
       power: walletPower.toFixed(8),
       reward: voterReward.toFixed(8),
-      voteAge
+      voteAge: voteAge.toString()
     };
   }
 }

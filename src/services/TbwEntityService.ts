@@ -22,7 +22,8 @@ export default class TbwEntityService {
       fullShare: licenseFeeCut.toString(),
       reward: licenseFee,
       power: "0",
-      voteAge: 0
+      voteAge: "0",
+      sharePercentage: "1"
     });
   }
 
@@ -34,7 +35,8 @@ export default class TbwEntityService {
       fullShare: validatorShare,
       reward: validatorFee,
       power: "0",
-      voteAge: 0
+      voteAge: "0",
+      sharePercentage: "100"
     });
   }
 

@@ -63,13 +63,20 @@ export default class TbwService {
 
       totalVotersPayout = totalVotersPayout.plus(result.reward);
 
+      // TODO klopt dit?
+      const voterSharePercentage = new BigNumber(result.share)
+        .div(result.fullShare)
+        .times(100)
+        .toFixed(8);
+
       tbwEntityService.push({
         wallet: wallet.address,
         share: result.share,
         power: result.power,
         reward: result.reward,
         fullShare: result.fullShare,
-        voteAge: result.voteAge
+        voteAge: result.voteAge,
+        sharePercentage: voterSharePercentage
       });
     }
 
