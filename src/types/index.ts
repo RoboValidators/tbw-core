@@ -14,8 +14,8 @@ export interface Voter {
   wallet: string;
   share: string;
   reward: string;
-  power: string;
-  fullShare: string;
+  power?: string;
+  fullShare?: string;
 }
 
 export interface Publisher {
