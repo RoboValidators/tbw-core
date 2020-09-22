@@ -1,4 +1,6 @@
 import BigNumber from "bignumber.js";
+import moment from "moment";
+import { Managers } from "@arkecosystem/crypto";
 
 import OptionsService from "../services/plugin/OptionsService";
 
@@ -17,6 +19,8 @@ export default class Helpers {
       .div(configuredVoteStages)
       .div(100);
 
+    const temp = moment(Managers.configManager.getMilestone().epoch);
+    console.log(`temp ${temp}`);
     console.log(`Vote Age ${voteAge}`);
     console.log(`configuredVoteStages ${configuredVoteStages}`);
     console.log(`minPercentage ${minPercentage}`);
