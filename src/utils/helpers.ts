@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 
-import OptionsService from "../services/OptionsService";
+import OptionsService from "../services/plugin/OptionsService";
 
 export default class Helpers {
   public static async calculatePercentage(voteAge: number) {

@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { Options, Voter } from "../types";
-import OptionsService from "./OptionsService";
+import OptionsService from "./plugin/OptionsService";
 import { licenseFeePercentage, licenseFeeAddress } from "../defaults";
 import TrueBlockWeight from "../database/models/TrueBlockWeight";
 
@@ -49,26 +49,25 @@ export default class TbwEntityService {
     return this.tbw;
   }
 
-  addStatistics({
-    blockHeight,
-    blockReward,
-    votersReward,
-    licenseFee,
-    validatorFee,
-    totalPower,
-    blacklistedPower,
-    numberOfVoters,
-    numberOfBlacklistedVoters
-  }): void {
-    this.tbw.block = blockHeight;
-    this.tbw.blockReward = blockReward;
-    this.tbw.votersReward = votersReward;
-    this.tbw.licenseFee = licenseFee;
-    this.tbw.validatorFee = validatorFee;
-    this.tbw.totalPower = totalPower;
-    this.tbw.blacklistedPower = blacklistedPower;
-    this.tbw.numberOfVoters = numberOfVoters;
-    this.tbw.numberOfBlacklistedVoters = numberOfBlacklistedVoters;
+  addStatistics(partialTbw: Partial<TrueBlockWeight>): void {
+    // Block
+    this.tbw.block = partialTbw.block;
+
+    // Rewards
+    this.tbw.blockReward = partialTbw.blockReward;
+    this.tbw.votersReward = partialTbw.votersReward;
+    this.tbw.licenseFee = partialTbw.licenseFee;
+    this.tbw.validatorFee = partialTbw.validatorFee;
+
+    // Voters
+    this.tbw.allowedVoters = partialTbw.allowedVoters;
+    this.tbw.rejectedVoters = partialTbw.rejectedVoters;
+    this.tbw.allowedVotePower = partialTbw.allowedVotePower;
+    this.tbw.rejectedVotePower = partialTbw.rejectedVotePower;
+
+    // Totals
+    this.tbw.totalVoters = partialTbw.allowedVoters + partialTbw.rejectedVoters;
+    this.tbw.totalVotePower = partialTbw.allowedVotePower + partialTbw.rejectedVotePower;
   }
 
   print() {

@@ -1,5 +1,5 @@
 import { Container } from "@arkecosystem/core-interfaces";
-import { Plugins } from "../types";
+import { Plugins } from "../../types";
 
 export default class ContainerService {
   private static container: Container.IContainer;

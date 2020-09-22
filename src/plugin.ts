@@ -3,10 +3,10 @@ import { Container, Logger, EventEmitter } from "@arkecosystem/core-interfaces";
 
 import { defaults, alias } from "./defaults";
 import listener from "./listener";
-import Options from "./services/OptionsService";
-import LoggerService from "./services/LoggerService";
+import Options from "./services/plugin/OptionsService";
+import LoggerService from "./services/plugin/LoggerService";
 import { Plugins } from "./types";
-import ContainerService from "./services/ContainerService";
+import ContainerService from "./services/plugin/ContainerService";
 
 import pkg from "../package.json";
 

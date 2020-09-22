@@ -4,7 +4,7 @@ import moment from "moment";
 
 import { Attributes, Plugins } from "../types";
 import Parser from "../utils/parser";
-import ContainerService from "../services/ContainerService";
+import ContainerService from "./plugin/ContainerService";
 
 export default class WalletService {
   public static getPower(wallet: State.IWallet) {

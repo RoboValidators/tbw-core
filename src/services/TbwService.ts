@@ -67,20 +67,19 @@ export default class TbwService {
     tbwEntityService.addValidatorFee(totalValidatorReward.toFixed(8), validatorShare.toFixed(8));
 
     tbwEntityService.addStatistics({
-      blockHeight: block.height,
+      block: block.height,
       blockReward: blockReward.toFixed(8),
       licenseFee: licenseFee.toFixed(8),
       validatorFee: totalValidatorReward.toFixed(8),
       votersReward: totalVotersReward.toFixed(8),
-      numberOfVoters: voters.allowedVoters.length,
-      numberOfBlacklistedVoters: voters.rejectedVoters.length,
-      totalPower: voteBalances.allowedVoteBalance.toFixed(8),
-      blacklistedPower: voteBalances.rejectedVoteBalance.toFixed(8)
+      allowedVoters: voters.allowedVoters.length,
+      rejectedVoters: voters.rejectedVoters.length,
+      allowedVotePower: voteBalances.allowedVoteBalance.toFixed(8),
+      rejectedVotePower: voteBalances.rejectedVoteBalance.toFixed(8)
     });
-    // TODO totalPower and totalVoters nu enkel allowed, niet total!!!!
 
-    // Persist data to database
-    db.addTbw(tbwEntityService.getTbw());
+    // TODO uncomment - Persist data to database
+    // db.addTbw(tbwEntityService.getTbw());
 
     // Print Statistics
     tbwEntityService.print();

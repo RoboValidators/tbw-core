@@ -4,8 +4,8 @@ import BigNumber from "bignumber.js";
 import { Attributes, Plugins, ValidatorAttrs } from "../types";
 import Parser from "../utils/parser";
 
-import ContainerService from "./ContainerService";
-import OptionsService from "./OptionsService";
+import ContainerService from "./plugin/ContainerService";
+import OptionsService from "./plugin/OptionsService";
 import WalletService from "./WalletService";
 
 export default class ValidatorService {

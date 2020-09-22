@@ -3,8 +3,6 @@ import BigNumber from "bignumber.js";
 import { PayoutResult, PayoutStrategy } from "../types";
 
 export default class TbwStrategy implements PayoutStrategy {
-  // The method to determing the payout of the voter
-  // This is seperate logic to allow for easy adjustments to the core payout logic
   async calculate(
     walletPower: BigNumber,
     allowedVotePower: BigNumber,
@@ -13,7 +11,7 @@ export default class TbwStrategy implements PayoutStrategy {
     // Determine true block weight share of the wallet
     const tbw = walletPower.div(allowedVotePower);
 
-    // Calculate reward depending on either the full or cut off share rate
+    // Calculate TBW reward (static validator and license fees are already cut off)
     const voterReward = tbw.times(votersRewards);
 
     return {
