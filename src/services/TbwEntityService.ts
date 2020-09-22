@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+import BigNumber from "bignumber.js";
 
 import { Options, Voter } from "../types";
 import OptionsService from "./plugin/OptionsService";
@@ -67,7 +68,9 @@ export default class TbwEntityService {
 
     // Totals
     this.tbw.totalVoters = partialTbw.allowedVoters + partialTbw.rejectedVoters;
-    this.tbw.totalVotePower = partialTbw.allowedVotePower + partialTbw.rejectedVotePower;
+    this.tbw.totalVotePower = new BigNumber(partialTbw.allowedVotePower)
+      .plus(partialTbw.rejectedVotePower)
+      .toFixed(0);
   }
 
   print() {
