@@ -31,6 +31,7 @@ export interface Options extends Container.IPluginOptions {
   voteStages: number;
   minPercentage: number;
   startHeight: number;
+  strategy: PayoutStrategies;
   validator: {
     name: string;
     publicKey: string;
@@ -63,6 +64,19 @@ export interface Block {
   transactions?: Interfaces.ITransactionData[];
 }
 
+export interface PayoutResult {
+  rest: BigNumber;
+  reward: BigNumber;
+}
+
+export interface PayoutStrategy {
+  calculate(
+    walletPower: BigNumber,
+    allowedVotePower: BigNumber,
+    votersRewards: BigNumber
+  ): Promise<PayoutResult>;
+}
+
 export enum Publishers {
   TWITTER = "TWITTER",
   TELEGRAM = "TELEGRAM"
@@ -81,4 +95,9 @@ export enum Plugins {
 export enum Attributes {
   STAKEPOWER = "stakePower",
   VALIDATOR = "delegate"
+}
+
+export enum PayoutStrategies {
+  VoteAge = "voteAge",
+  TrueBlockWeight = "trueBlockWeight"
 }
