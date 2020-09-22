@@ -39,8 +39,9 @@ export default class WalletService {
     const timeInDays = moment.duration(moment().diff(voteMoment)).asDays();
 
     console.log(`=== TID ${wallet.address} ===`);
+    console.log(`epoch ${Managers.configManager.getMilestone().epoch}`);
     console.log(`voteMoment ${voteMoment}`);
-    console.log(`lastVote ${lastVote}`);
+    console.log(`lastVote ${lastVote.timestamp}`);
     console.log(votesByWallet.rows);
 
     return timeInDays;
