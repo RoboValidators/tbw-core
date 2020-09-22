@@ -36,6 +36,13 @@ export default class WalletService {
     );
 
     // Determine voting age in days
-    return moment.duration(moment().diff(voteMoment)).asDays();
+    const timeInDays = moment.duration(moment().diff(voteMoment)).asDays();
+
+    console.log(`=== TID ${wallet.address} ===`);
+    console.log(`voteMoment ${voteMoment}`);
+    console.log(`lastVote ${lastVote}`);
+    console.log(votesByWallet.rows);
+
+    return timeInDays;
   }
 }

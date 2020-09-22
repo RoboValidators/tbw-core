@@ -17,7 +17,6 @@ export default class Helpers {
       .div(configuredVoteStages)
       .div(100);
 
-    console.log("========================");
     console.log(`Vote Age ${voteAge}`);
     console.log(`configuredVoteStages ${configuredVoteStages}`);
     console.log(`minPercentage ${minPercentage}`);
