@@ -23,7 +23,7 @@ export default class TbwEntityService {
       reward: licenseFee,
       power: "0",
       voteAge: "0",
-      sharePercentage: "1"
+      sharePercentage: "100"
     });
   }
 

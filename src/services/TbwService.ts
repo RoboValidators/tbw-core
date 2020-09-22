@@ -63,7 +63,6 @@ export default class TbwService {
 
       totalVotersPayout = totalVotersPayout.plus(result.reward);
 
-      // TODO klopt dit?
       const voterSharePercentage = new BigNumber(result.share)
         .div(result.fullShare)
         .times(100)
