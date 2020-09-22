@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import OptionsService from "../services/OptionsService";
+import OptionsService from "../services/plugin/OptionsService";
 import { PayoutStrategies, PayoutStrategy } from "../types";
 import TbwStrategy from "./TbwStrategy";
 

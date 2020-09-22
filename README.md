@@ -31,6 +31,7 @@ module.exports = {
         voteAge: 7, // The vote age required to get rewards
         voteStages: 7, // The vote stages to spread the vote age over (ex: day 1: 100% / stages * days)
         minPercentage: 80, // Minimum amount of percentage to share (ex: voteAge 1, stage 1 would be 14%, now stage 1 would be 82,5%)
+        strategy: "trueBlockWeight", // Strategy to apply for calculating the rewards
         startHeight: 0, // Heigh to start from
         validator: {
             name: "bindie", // Your validator name
