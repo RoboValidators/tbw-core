@@ -13,6 +13,7 @@ export interface ITbw {
 export interface Voter {
   wallet: string;
   reward: string;
+  fullReward: string;
   power: string;
   share: string;
   fullShare: string;

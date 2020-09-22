@@ -53,9 +53,10 @@ export default class TbwService {
 
       tbwEntityService.push({
         wallet: wallet.address,
-        share: voterReward.div(votersRewards).toFixed(8),
         power: walletPower.toFixed(8),
         reward: voterReward.toFixed(8),
+        fullReward: tbwResult.reward.toFixed(8),
+        share: voterReward.div(votersRewards).toFixed(8),
         fullShare: tbwResult.reward.div(votersRewards).toFixed(8),
         voteAge: voteAge.toFixed(8),
         sharePercentage: percentage.toFixed(8)
