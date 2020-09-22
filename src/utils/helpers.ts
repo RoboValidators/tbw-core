@@ -25,11 +25,12 @@ export default class Helpers {
     console.log(`configuredVoteStages ${configuredVoteStages}`);
     console.log(`minPercentage ${minPercentage}`);
     console.log(`voteAge < options.voteAge ${voteAge < options.voteAge}`);
+    console.log(`percentageIncrease % ${percentageIncrease}`);
     console.log(`immature % ${percentageIncrease.times(voteAge).plus(minPercentage)}`);
     console.log("========================");
 
     return voteAge < options.voteAge
-      ? percentageIncrease.times(voteAge).plus(minPercentage)
+      ? percentageIncrease.times(voteAge).div(100).plus(minPercentage)
       : new BigNumber(1);
   }
 }
