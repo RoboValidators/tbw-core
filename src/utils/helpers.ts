@@ -27,7 +27,7 @@ export default class Helpers {
     console.log("========================");
 
     return voteAge < options.voteAge
-      ? percentageIncrease.times(voteAge).div(100).plus(minPercentage)
+      ? percentageIncrease.times(voteAge).plus(minPercentage)
       : new BigNumber(1);
   }
 }
