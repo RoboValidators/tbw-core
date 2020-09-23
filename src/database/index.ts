@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 import { Voter } from "../types";
 import TrueBlockWeight from "./models/TrueBlockWeight";
 import VoterModel from "./models/Voters";
@@ -19,7 +21,10 @@ export default class DB {
       const foundWallet = allVoters.find((v) => v.id === voter.wallet);
 
       if (foundWallet) {
-        foundWallet.pendingBalance = voter.reward;
+        foundWallet.pendingBalance = new BigNumber(foundWallet.pendingBalance)
+          .plus(voter.reward)
+          .toFixed(8);
+
         voterBatch.update(foundWallet);
       } else {
         const newVoter = new VoterModel();
