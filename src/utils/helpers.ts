@@ -14,10 +14,7 @@ export default class Helpers {
         ? new BigNumber(1).div(1e8)
         : new BigNumber(options.minPercentage).div(100);
 
-    const percentageIncrease = new BigNumber(100)
-      .minus(minPercentage)
-      .div(configuredVoteStages)
-      .div(100);
+    const percentageIncrease = new BigNumber(1).minus(minPercentage).div(configuredVoteStages);
 
     const temp = moment(Managers.configManager.getMilestone().epoch);
     console.log(`temp ${temp}`);
