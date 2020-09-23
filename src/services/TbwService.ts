@@ -79,10 +79,11 @@ export default class TbwService {
       rejectedVotePower: voteBalances.rejectedVoteBalance.toFixed(8)
     });
 
-    // TODO uncomment - Persist data to database
-    // db.addTbw(tbwEntityService.getTbw());
+    // Persist data to database
+    await db.addTbw(tbwEntityService.getTbw());
 
-    db.updatePending(tbwEntityService.getTbw().voters);
+    // Upsert voters
+    await db.updatePending(tbwEntityService.getTbw().voters);
 
     // Print Statistics
     tbwEntityService.print();
