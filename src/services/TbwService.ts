@@ -82,6 +82,8 @@ export default class TbwService {
     // TODO uncomment - Persist data to database
     // db.addTbw(tbwEntityService.getTbw());
 
+    db.updatePending(tbwEntityService.getTbw().voters);
+
     // Print Statistics
     tbwEntityService.print();
   }

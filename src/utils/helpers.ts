@@ -1,6 +1,4 @@
 import BigNumber from "bignumber.js";
-import moment from "moment";
-import { Managers } from "@arkecosystem/crypto";
 
 import OptionsService from "../services/plugin/OptionsService";
 
@@ -15,16 +13,6 @@ export default class Helpers {
         : new BigNumber(options.minPercentage).div(100);
 
     const percentageIncrease = new BigNumber(1).minus(minPercentage).div(configuredVoteStages);
-
-    const temp = moment(Managers.configManager.getMilestone().epoch);
-    console.log(`temp ${temp}`);
-    console.log(`Vote Age ${voteAge}`);
-    console.log(`configuredVoteStages ${configuredVoteStages}`);
-    console.log(`minPercentage ${minPercentage}`);
-    console.log(`voteAge < options.voteAge ${voteAge < options.voteAge}`);
-    console.log(`percentageIncrease % ${percentageIncrease}`);
-    console.log(`immature % ${percentageIncrease.times(voteAge).plus(minPercentage)}`);
-    console.log("========================");
 
     return voteAge < options.voteAge
       ? percentageIncrease.times(voteAge).plus(minPercentage)
