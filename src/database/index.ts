@@ -35,6 +35,7 @@ export default class DB {
       } else {
         const newVoter = new VoterModel();
         newVoter.id = voter.wallet;
+        newVoter.wallet = voter.wallet;
         newVoter.paidBalance = "0";
         newVoter.pendingBalance = voter.reward;
         voterBatch.create(newVoter);

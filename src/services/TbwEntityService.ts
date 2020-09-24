@@ -12,6 +12,7 @@ export default class TbwEntityService {
   constructor(block: number) {
     this.options = OptionsService.getOptions();
     this.tbw.id = block.toString();
+    this.tbw.block = block;
   }
 
   addLicenseFee(licenseFee: string): void {
