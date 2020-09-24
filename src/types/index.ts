@@ -41,7 +41,6 @@ export interface Options extends Container.IPluginOptions {
   };
 }
 
-// TODO - use interface of @compendia/crypto when published
 export interface Block {
   id?: string;
   idHex?: string;
@@ -78,11 +77,6 @@ export interface PayoutStrategy {
   ): Promise<PayoutResult>;
 }
 
-export enum Publishers {
-  TWITTER = "TWITTER",
-  TELEGRAM = "TELEGRAM"
-}
-
 export enum Events {
   BlockApplied = "block.applied"
 }
@@ -99,6 +93,5 @@ export enum Attributes {
 }
 
 export enum PayoutStrategies {
-  VoteAge = "voteAge",
   TrueBlockWeight = "trueBlockWeight"
 }
