@@ -1,90 +1,89 @@
-import { Database } from "@arkecosystem/core-interfaces";
 import BigNumber from "bignumber.js";
 
 import db from "../database";
-import ContainerService from "./ContainerService";
-import { Block, Options, Plugins, Attributes, ValidatorAttrs } from "../types";
+import { Block, Options } from "../types";
 import Parser from "../utils/parser";
 import TbwEntityService from "./TbwEntityService";
-import { licenseFeeCut } from "../defaults";
+import { licenseFeePercentage } from "../defaults";
+import WalletService from "./WalletService";
+import PayoutStrategyFactory from "../Payout/StrategyFactory";
+import ValidatorService from "./ValidatorService";
 import Helpers from "../utils/helpers";
 
 export default class TbwService {
   static async check(block: Block, options: Options) {
-    // Setup services
-    const dbService = ContainerService.resolve<Database.IDatabaseService>(Plugins.DATABASE);
-    const walletManager = dbService.walletManager;
-    const txRepository = dbService.transactionsBusinessRepository;
+    // Get payout strategy from factory
+    const payoutStrategy = PayoutStrategyFactory.get();
 
-    // Get all voters for validator
-    const voters = walletManager
-      .allByAddress()
-      .filter((wallet) => wallet.getAttribute<string>("vote") === options.validator.publicKey);
+    // Get rejected/allowed voters and voteBalances
+    const voters = await ValidatorService.getVoters();
+    const voteBalances = await ValidatorService.getVoteBalances(voters.rejectedVoters);
 
-    // Get list of voters and blacklisted voters
-    const filteredVoters = voters.filter((voter) => !options.blacklist.includes(voter.address));
-    const blacklistedVoters = voters.filter((voter) => options.blacklist.includes(voter.address));
-
-    // Calculate voting power of the blacklisted wallets
-    const blacklistedVotePower = blacklistedVoters.reduce((acc, wallet) => {
-      return acc.plus(Helpers.getWalletPower(wallet));
-    }, new BigNumber(0));
-
-    // Get validator wallet and attributes
-    const validatorWallet = walletManager.findByPublicKey(options.validator.publicKey);
-    const validatorAttrs = validatorWallet.getAttribute<ValidatorAttrs>(Attributes.VALIDATOR);
-
-    const totalVotePower = Parser.normalize(validatorAttrs.voteBalance).minus(blacklistedVotePower);
     const blockReward = Parser.normalize(block.totalFee.plus(block.reward));
     const sharePercentage = new BigNumber(options.validator.sharePercentage).div(100);
-    let totalVotersPayout = new BigNumber(0);
+    let totalValidatorReward = new BigNumber(1).minus(sharePercentage).times(blockReward);
+    let totalVotersReward = new BigNumber(0);
 
-    const licenseFee = blockReward.times(licenseFeeCut); // 1% License Fee (ex: 100 block fee: 1 BIND)
-    const restRewards = blockReward.times(1 - licenseFeeCut); // 99% Rest Reward (ex: 100 block fee: 99 BIND)
-    const votersRewards = restRewards.times(sharePercentage); // Voters cut of the 99 BIND (ex: 90% -> 89,10 BIND)
-    const validatorFee = restRewards.times(new BigNumber(1).minus(sharePercentage)); // Validator cut of the 99 BIND (ex: 10% -> 0,99 BIND)
+    const licenseFee = blockReward.times(licenseFeePercentage);
+    const votersRewards = blockReward.minus(licenseFee).minus(totalValidatorReward);
 
-    // Initialize TBW Entity with prefilled license fee and block height
-    const tbwEntityService = new TbwEntityService(licenseFee.toString(), block);
+    // Initialize TBW Entity
+    const tbwEntityService = new TbwEntityService(block.height);
 
     // Calculate reward per wallet for this block
-    for (const wallet of filteredVoters) {
-      const { share, power, reward } = await Helpers.calculatePayout(
-        wallet,
-        totalVotePower,
-        votersRewards,
-        txRepository
+    for (const wallet of voters.allowedVoters) {
+      const walletPower = WalletService.getPower(wallet);
+      const voteAge = await WalletService.getVoteAge(wallet);
+
+      // Calculate percentage earned by vote age
+      const percentage = await Helpers.calculatePercentage(voteAge);
+
+      // Calculate payout by strategy
+      const tbwResult = await payoutStrategy.calculate(
+        walletPower,
+        voteBalances.allowedVoteBalance,
+        votersRewards
       );
 
-      totalVotersPayout = totalVotersPayout.plus(reward);
+      const voterReward = percentage.times(tbwResult.reward);
+      const extraValidatorReward = tbwResult.reward.minus(voterReward);
+
+      totalVotersReward = totalVotersReward.plus(voterReward);
+      totalValidatorReward = totalValidatorReward.plus(tbwResult.rest).plus(extraValidatorReward);
 
       tbwEntityService.push({
         wallet: wallet.address,
-        share,
-        power,
-        reward
+        power: walletPower.toFixed(8),
+        reward: voterReward.toFixed(8),
+        fullReward: tbwResult.reward.toFixed(8),
+        share: voterReward.div(votersRewards).toFixed(8),
+        fullShare: tbwResult.reward.div(votersRewards).toFixed(8),
+        voteAge: voteAge.toFixed(8),
+        sharePercentage: percentage.toFixed(8)
       });
     }
 
-    // Calculate rest reward (due to vote age) and add the validator fee
-    const totalValidatorFee = votersRewards.minus(totalVotersPayout).plus(validatorFee);
-    // Calculate true validator share
-    const validatorShare = totalValidatorFee.div(votersRewards);
+    // Calculate true validator share and add to Entity Service alogn with license Fee
+    const validatorShare = totalValidatorReward.div(votersRewards);
+    tbwEntityService.addValidatorFee(totalValidatorReward.toFixed(8), validatorShare.toFixed(8));
+    tbwEntityService.addLicenseFee(licenseFee.toFixed(8));
 
-    tbwEntityService.addValidatorFee(totalValidatorFee.toString(), validatorShare.toString());
     tbwEntityService.addStatistics({
-      blockReward: blockReward.toString(), // Reward share statistics
-      licenseFee: licenseFee.toString(),
-      validatorFee: totalValidatorFee.toString(),
-      votersReward: totalVotersPayout.toString(),
-      numberOfVoters: voters.length, // Voter and blacklist statistics
-      numberOfBlacklistedVoters: blacklistedVoters.length,
-      totalPower: totalVotePower.toString(),
-      blacklistedPower: blacklistedVotePower.toString()
+      blockReward: blockReward.toFixed(8),
+      licenseFee: licenseFee.toFixed(8),
+      validatorFee: totalValidatorReward.toFixed(8),
+      votersReward: totalVotersReward.toFixed(8),
+      allowedVoters: voters.allowedVoters.length,
+      rejectedVoters: voters.rejectedVoters.length,
+      allowedVotePower: voteBalances.allowedVoteBalance.toFixed(8),
+      rejectedVotePower: voteBalances.rejectedVoteBalance.toFixed(8)
     });
 
     // Persist data to database
-    db.addTbw(tbwEntityService.getTbw());
+    await db.addTbw(tbwEntityService.getTbw());
+
+    // Upsert voters
+    await db.updatePending(tbwEntityService.getTbw().voters);
 
     // Print Statistics
     tbwEntityService.print();

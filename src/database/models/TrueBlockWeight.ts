@@ -5,7 +5,6 @@ import { Voter } from "../../types";
 @Collection("trueBlockWeight")
 export default class TrueBlockWeight {
   id: string;
-  block: number;
   voters: Voter[];
 
   /**
@@ -17,12 +16,14 @@ export default class TrueBlockWeight {
   validatorFee: string; // Fee for the validator
 
   /**
-   * Voter & blacklist statistics per block
+   * Voter statistics per block
    */
-  totalPower: string; // Total voting power of the validator
-  blacklistedPower: string; // Total blacklisted voting power of the validator
-  numberOfVoters: number; // Amount of voters
-  numberOfBlacklistedVoters: number; // Amount of voters blacklisted
+  allowedVotePower: string; // Voting power of all allowed wallets
+  rejectedVotePower: string; // Voting power of all rejected wallets
+  allowedVoters: number; // Amount of voters allowed
+  rejectedVoters: number; // Amount of voters rejected
+  totalVoters: number; // Total amount of voters
+  totalVotePower: string; // Total amount of voting power
 
   constructor() {
     this.voters = [];

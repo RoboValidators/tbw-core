@@ -1,4 +1,4 @@
-import { Options } from "../types";
+import { Options } from "../../types";
 
 export default class OptionsService {
   private static options: Options;

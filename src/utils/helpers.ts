@@ -1,68 +1,21 @@
-import { State, Database } from "@arkecosystem/core-interfaces";
-import { Utils, Managers } from "@arkecosystem/crypto";
 import BigNumber from "bignumber.js";
-import moment from "moment";
 
-import { Attributes } from "../types";
-import Parser from "./parser";
-import OptionsService from "../services/OptionsService";
+import OptionsService from "../services/plugin/OptionsService";
 
 export default class Helpers {
-  public static getWalletPower(wallet: State.IWallet) {
-    let walletPower = Parser.normalize(wallet.balance);
-
-    if (wallet.hasAttribute(Attributes.STAKEPOWER)) {
-      const stakePower = wallet.getAttribute<Utils.BigNumber>(Attributes.STAKEPOWER);
-      walletPower = walletPower.plus(Parser.normalize(stakePower));
-    }
-
-    return walletPower;
-  }
-
-  // The method to determing the payout of the voter
-  // This is seperate logic to allow for easy adjustments to the core payout logic
-  public static async calculatePayout(
-    wallet: State.IWallet,
-    totalVoteBalance: BigNumber,
-    votersRewards: BigNumber,
-    txRepository: Database.ITransactionsBusinessRepository
-  ) {
-    // Setup services
+  public static async calculatePercentage(voteAge: number) {
     const options = OptionsService.getOptions();
 
-    // Get wallet voting power and all votes of the wallet (last vote first:desc)
-    const walletPower = Helpers.getWalletPower(wallet);
-    const votesByWallet = await txRepository.allVotesBySender(wallet.publicKey, {
-      orderBy: "timestamp:desc"
-    });
+    const configuredVoteStages = options.voteStages === 0 ? 1 : options.voteStages;
+    const minPercentage =
+      options.minPercentage === 0
+        ? new BigNumber(1).div(1e8)
+        : new BigNumber(options.minPercentage).div(100);
 
-    // Get last vote from the array and calculate time of voting
-    const lastVote = votesByWallet.rows.shift();
-    const voteMoment = moment(Managers.configManager.getMilestone().epoch).add(
-      lastVote.timestamp,
-      "seconds"
-    );
+    const percentageIncrease = new BigNumber(1).minus(minPercentage).div(configuredVoteStages);
 
-    // Determine voting age in days and derive a votinge percentage based on it
-    const voteAge = moment.duration(moment().diff(voteMoment)).asDays();
-    const voteAgePercentage = new BigNumber(100).div(options.voteStages).div(100);
-
-    // Determine true block weight share of the wallet
-    const fullShare = walletPower.div(totalVoteBalance);
-
-    // Cut off true block weight share when vote isn't matured yet
-    const share =
-      options.voteAge !== 0 && voteAge < options.voteAge
-        ? voteAgePercentage.times(voteAge).times(fullShare)
-        : fullShare;
-
-    // Calculate reward depending on either the full or cut off share rate
-    const voterReward = share.times(votersRewards);
-
-    return {
-      share: share.toString(),
-      power: walletPower.toString(),
-      reward: voterReward.toString()
-    };
+    return voteAge < options.voteAge
+      ? percentageIncrease.times(voteAge).plus(minPercentage)
+      : new BigNumber(1);
   }
 }
