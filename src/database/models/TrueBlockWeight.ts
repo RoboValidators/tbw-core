@@ -5,7 +5,6 @@ import { Voter } from "../../types";
 @Collection("trueBlockWeight")
 export default class TrueBlockWeight {
   id: string;
-  block: number;
   voters: Voter[];
 
   /**

@@ -27,8 +27,8 @@ export default class TbwService {
     const licenseFee = blockReward.times(licenseFeePercentage);
     const votersRewards = blockReward.minus(licenseFee).minus(totalValidatorReward);
 
-    // Initialize TBW Entity with prefilled license fee and block height
-    const tbwEntityService = new TbwEntityService(licenseFee.toFixed(8));
+    // Initialize TBW Entity
+    const tbwEntityService = new TbwEntityService(block.height);
 
     // Calculate reward per wallet for this block
     for (const wallet of voters.allowedVoters) {
@@ -63,12 +63,12 @@ export default class TbwService {
       });
     }
 
-    // Calculate true validator share and add to Entity Service
+    // Calculate true validator share and add to Entity Service alogn with license Fee
     const validatorShare = totalValidatorReward.div(votersRewards);
     tbwEntityService.addValidatorFee(totalValidatorReward.toFixed(8), validatorShare.toFixed(8));
+    tbwEntityService.addLicenseFee(licenseFee.toFixed(8));
 
     tbwEntityService.addStatistics({
-      block: block.height,
       blockReward: blockReward.toFixed(8),
       licenseFee: licenseFee.toFixed(8),
       validatorFee: totalValidatorReward.toFixed(8),

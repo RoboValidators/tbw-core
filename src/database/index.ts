@@ -30,7 +30,6 @@ export default class DB {
         const newVoter = new VoterModel();
         newVoter.id = voter.wallet;
         newVoter.paidBalance = "0";
-        newVoter.wallet = voter.wallet;
         newVoter.pendingBalance = voter.reward;
         voterBatch.create(newVoter);
       }

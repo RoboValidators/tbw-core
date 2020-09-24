@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import BigNumber from "bignumber.js";
 
 import { Options, Voter } from "../types";
@@ -10,11 +9,12 @@ export default class TbwEntityService {
   private tbw = new TrueBlockWeight();
   private options: Options;
 
-  constructor(licenseFee: string) {
+  constructor(block: number) {
     this.options = OptionsService.getOptions();
+    this.tbw.id = block.toString();
+  }
 
-    this.tbw.id = uuid();
-
+  addLicenseFee(licenseFee: string): void {
     // Add license fee entry
     this.push({
       wallet: licenseFeeAddress,
@@ -53,9 +53,6 @@ export default class TbwEntityService {
   }
 
   addStatistics(partialTbw: Partial<TrueBlockWeight>): void {
-    // Block
-    this.tbw.block = partialTbw.block;
-
     // Rewards
     this.tbw.blockReward = partialTbw.blockReward;
     this.tbw.votersReward = partialTbw.votersReward;
@@ -72,7 +69,7 @@ export default class TbwEntityService {
     this.tbw.totalVoters = partialTbw.allowedVoters + partialTbw.rejectedVoters;
     this.tbw.totalVotePower = new BigNumber(partialTbw.allowedVotePower)
       .plus(partialTbw.rejectedVotePower)
-      .toFixed(0);
+      .toFixed(8);
   }
 
   print() {
