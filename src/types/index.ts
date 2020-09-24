@@ -13,6 +13,7 @@ export interface ITbw {
 export interface Voter {
   wallet: string;
   reward: string;
+  fullReward: string;
   power: string;
   share: string;
   fullShare: string;
@@ -31,6 +32,7 @@ export interface Options extends Container.IPluginOptions {
   voteStages: number;
   minPercentage: number;
   startHeight: number;
+  strategy: PayoutStrategies;
   validator: {
     name: string;
     publicKey: string;
@@ -39,7 +41,6 @@ export interface Options extends Container.IPluginOptions {
   };
 }
 
-// TODO - use interface of @compendia/crypto when published
 export interface Block {
   id?: string;
   idHex?: string;
@@ -63,9 +64,17 @@ export interface Block {
   transactions?: Interfaces.ITransactionData[];
 }
 
-export enum Publishers {
-  TWITTER = "TWITTER",
-  TELEGRAM = "TELEGRAM"
+export interface PayoutResult {
+  rest: BigNumber;
+  reward: BigNumber;
+}
+
+export interface PayoutStrategy {
+  calculate(
+    walletPower: BigNumber,
+    allowedVotePower: BigNumber,
+    votersRewards: BigNumber
+  ): Promise<PayoutResult>;
 }
 
 export enum Events {
@@ -81,4 +90,8 @@ export enum Plugins {
 export enum Attributes {
   STAKEPOWER = "stakePower",
   VALIDATOR = "delegate"
+}
+
+export enum PayoutStrategies {
+  TrueBlockWeight = "trueBlockWeight"
 }
