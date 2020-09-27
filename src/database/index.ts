@@ -48,9 +48,16 @@ export default class DB {
 
     // Update new voters count
     const count = await voterCountRepository.findById("count");
-    await voterCountRepository.update({
-      id: "count",
-      length: count.length + newVoters
-    });
+    if (count) {
+      await voterCountRepository.update({
+        id: "count",
+        length: count.length + newVoters
+      });
+    } else {
+      await voterCountRepository.create({
+        id: "count",
+        length: newVoters
+      });
+    }
   }
 }
