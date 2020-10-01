@@ -7,3 +7,9 @@ export default class Voter {
   paidBalance: string;
   pendingBalance: string;
 }
+
+@Collection("voters-count")
+export class VoterCount {
+  id: string;
+  length: number;
+}
