@@ -2,19 +2,19 @@
 # yarn lockfile v1
 
 
-"@arkecosystem/core-interfaces@2.7.13":
-  version "2.7.13"
-  resolved "https://registry.yarnpkg.com/@arkecosystem/core-interfaces/-/core-interfaces-2.7.13.tgz#c41b6b1c2cebabbe967a4614b5b1cb5ed6841e51"
-  integrity sha512-1Ip5r2tIprPOvMPZKXZwzbxAXrffMuOEqWZBdwDLuob5vizz5sZzWOv6Ic1aJivDDZ+SYNPMD/bKX9+TnBKsGA==
+"@arkecosystem/core-interfaces@2.7.24":
+  version "2.7.24"
+  resolved "https://registry.yarnpkg.com/@arkecosystem/core-interfaces/-/core-interfaces-2.7.24.tgz#3ab54a2cdd16ba144ed83c503af657784620f5cd"
+  integrity sha512-g+E258+23f6YsnOdgZ8jfOJ+nC3HkRseB1lXwUZhXqhhmzJuEYttna91mVNqvbH8ro0I3aRuSppnPuFbDJWgew==
   dependencies:
-    "@arkecosystem/crypto" "^2.7.13"
+    "@arkecosystem/crypto" "^2.7.24"
     awilix "^4.2.2"
     dayjs "^1.8.15"
 
-"@arkecosystem/crypto@^2.7.13":
-  version "2.7.13"
-  resolved "https://registry.yarnpkg.com/@arkecosystem/crypto/-/crypto-2.7.13.tgz#42f022440e02a30f911e9f38319d1a2513049c0b"
-  integrity sha512-LJrabWnH4vyBVmKsHFW9LhBWCZZAlVXu1b6hR7dNsIxyy4gw6ZjMt8EQ4lB+yUcf5cdGMH5MGd73HEOxARenKg==
+"@arkecosystem/crypto@^2.7.24":
+  version "2.7.24"
+  resolved "https://registry.yarnpkg.com/@arkecosystem/crypto/-/crypto-2.7.24.tgz#7e2bfd6374f057ba86cc136e335cbb6f1b342456"
+  integrity sha512-jGtscWk04hvoqXOkWdh3CgNFZNQBAXHLkrQOPqLw410yL218EtdBthxf+9+us2JnzoP7crfMa95bsL61aCzEVQ==
   dependencies:
     "@arkecosystem/utils" "^1.2"
     "@types/bytebuffer" "^5.0.40"
