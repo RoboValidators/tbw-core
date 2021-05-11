@@ -34,7 +34,7 @@
     "@arkecosystem/core-interfaces": "2.7.25",
     "bignumber.js": "9.0.1",
     "firebase": "7.24.0",
-    "firebase-admin": "9.7.0",
+    "firebase-admin": "9.8.0",
     "fireorm": "0.20.0",
     "moment": "2.29.1",
     "reflect-metadata": "0.1.13"
