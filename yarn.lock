@@ -2204,10 +2204,10 @@ cjs-module-lexer@^0.6.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-0.6.0.tgz#4186fcca0eae175970aee870b9fe2d6cf8d5655f"
   integrity sha512-uc2Vix1frTfnuzxxu1Hp4ktSvM3QaI4oXl4ZUqL1wjTu/BGki9TrCWoqLTg/drR1KwAEarXuRFCG2Svr1GxPFw==
 
-class-transformer@^0.2.0:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.2.3.tgz#598c92ca71dcca73f91ccb875d74a3847ccfa32d"
-  integrity sha512-qsP+0xoavpOlJHuYsQJsN58HXSl8Jvveo+T37rEvCEeRfMWoytAyR0Ua/YsFgpM6AZYZ/og2PJwArwzJl1aXtQ==
+class-transformer@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.4.0.tgz#b52144117b423c516afb44cc1c76dbad31c2165b"
+  integrity sha512-ETWD/H2TbWbKEi7m9N4Km5+cw1hNcqJSxlSYhsLsNjQzWWiZIYA1zafxpK9PwVfaZ6AqR5rrjPVUBGESm5tQUA==
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -3268,12 +3268,12 @@ firebase@7.24.0:
     "@firebase/storage" "0.3.43"
     "@firebase/util" "0.3.2"
 
-fireorm@0.21.0:
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/fireorm/-/fireorm-0.21.0.tgz#e31e2e88d76d0e159639462cbb7b3278d516bf1f"
-  integrity sha512-KBlbTzAZtm9idoL70gn7p3A7+Ff1u75Rqplpk8dK5d72r/3bYztqv7eRUp0B/ok7fAPFf+Am3SInvzSCB/TRag==
+fireorm@0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/fireorm/-/fireorm-0.22.0.tgz#21544941249571564d586a1b9418bedfcaf9759c"
+  integrity sha512-ApZ11wIuRgmlf0SEwrS0+l03W+HYzTQ3tQSXFblBl3AZOIyJZWoYgeZSPRFohhumy6Dq8G+ZqpYdhhs2Mk44/Q==
   dependencies:
-    class-transformer "^0.2.0"
+    class-transformer "^0.4.0"
     pluralize "^8.0.0"
     ts-object-path "^0.1.2"
 
