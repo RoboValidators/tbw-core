@@ -12,6 +12,12 @@ export const defaults = {
     publicKey: "032dc97447a17a85aaa20b262ea482681bed867a905b7c61487bc506a7b939bbc5",
     payoutAddress: "cooy9XmErU98NLYp4cV9tnLEtWnqQ8JrFo",
     sharePercentage: 99
+  },
+  database: {
+    username: "dbUser",
+    password: "dbUserPassword",
+    url: "bindie-testnet.injjo.mongodb.net",
+    dbName: "myFirstDatabase"
   }
 };
 

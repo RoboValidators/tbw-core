@@ -1,7 +1,7 @@
-import { getRepository } from "fireorm";
-
 import VotersModel, { VoterCount } from "../models/Voters";
 
-export default getRepository(VotersModel);
+import { getMongoRepository } from "typeorm";
 
-export const voterCountRepository = getRepository(VoterCount);
+export default getMongoRepository(VotersModel);
+
+export const voterCountRepository = getMongoRepository(VoterCount);

@@ -1,15 +1,21 @@
-import { Collection } from "fireorm";
+import { Entity, Column, PrimaryColumn } from "typeorm";
 
-@Collection("voters")
+@Entity()
 export default class Voter {
+  @PrimaryColumn()
   id: string;
+  @Column()
   wallet: string;
+  @Column()
   paidBalance: string;
+  @Column()
   pendingBalance: string;
 }
 
-@Collection("voters-count")
+@Entity()
 export class VoterCount {
+  @PrimaryColumn()
   id: string;
+  @Column()
   length: number;
 }

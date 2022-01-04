@@ -1,5 +1,5 @@
-import { getRepository } from "fireorm";
+import { getMongoRepository } from "typeorm";
 
 import TrueBlockWeightModel from "../models/TrueBlockWeight";
 
-export default getRepository(TrueBlockWeightModel);
+export default getMongoRepository(TrueBlockWeightModel);

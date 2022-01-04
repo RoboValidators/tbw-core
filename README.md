@@ -38,6 +38,12 @@ module.exports = {
             publicKey: "032dc97447a17a85aaa20b262ea482681bed867a905b7c61487bc506a7b939bbc5", // Your validator public key
             payoutAddress: "cU3kVS8sgH4E4hcyaUEQ6DtxwJo2Y4L8iP", // The address you'd like to receive your validator cut on
             sharePercentage: 99 // The share percentage of your validator
+        },
+        database: {
+            username: "dbUser",
+            password: "dbUserPassword",
+            url: "bindie-testnet.injjo.mongodb.net",
+            dbName: "myFirstDatabase"
         }
     },
     // Any other plugins ..

@@ -11,50 +11,47 @@ export default class DB {
   private constructor() {}
 
   static async addTbw(tbw: TrueBlockWeight): Promise<void> {
-    const foundTbw = await tbwRepository.findById(tbw.id);
+    const foundTbw = await tbwRepository.findOne({ id: tbw.id });
     if (foundTbw) {
       LoggerService.getLogger().error(`TBW for blockheight ${tbw.id} already exists`);
     } else {
-      await tbwRepository.create(tbw);
+      tbwRepository.insertOne(tbw);
     }
   }
 
   static async updatePending(voters: Voter[]): Promise<void> {
-    const allVoters = await voterRepository.find();
-    const voterBatch = voterRepository.createBatch();
     let newVoters = 0;
 
-    voters.forEach((voter) => {
-      const foundWallet = allVoters.find((v) => v.id === voter.wallet);
+    for await (const voter of voters) {
+      const foundWallet = await voterRepository.findOne({ id: voter.wallet });
 
       if (foundWallet) {
         foundWallet.pendingBalance = new BigNumber(foundWallet.pendingBalance)
           .plus(voter.reward)
           .toFixed(8);
 
-        voterBatch.update(foundWallet);
+        voterRepository.updateOne({ id: voter.wallet }, foundWallet);
       } else {
         const newVoter = new VoterModel();
         newVoter.id = voter.wallet;
         newVoter.wallet = voter.wallet;
         newVoter.paidBalance = "0";
         newVoter.pendingBalance = voter.reward;
-        voterBatch.create(newVoter);
+        voterRepository.insertOne(newVoter);
         newVoters++;
       }
-    });
-
-    await voterBatch.commit();
+    }
 
     // Update new voters count
-    const count = await voterCountRepository.findById("count");
+    const count = await voterCountRepository.findOne({ id: "count" });
+
     if (count) {
-      await voterCountRepository.update({
+      await voterCountRepository.insertOne({
         id: "count",
         length: count.length + newVoters
       });
     } else {
-      await voterCountRepository.create({
+      await voterCountRepository.insertOne({
         id: "count",
         length: newVoters
       });
