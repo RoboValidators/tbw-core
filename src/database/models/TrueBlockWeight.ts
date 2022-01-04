@@ -1,12 +1,12 @@
-import { Entity, ObjectID, ObjectIdColumn, Column } from "typeorm";
+import { Entity, Column, PrimaryColumn } from "typeorm";
 
 import { Voter as VoterType } from "../../types";
 import Voter from "./Voters";
 
 @Entity()
 export default class TrueBlockWeight {
-  @ObjectIdColumn()
-  id: ObjectID;
+  @PrimaryColumn()
+  id: string;
   @Column()
   block: number;
   @Column(() => Voter)
