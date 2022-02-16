@@ -14,7 +14,7 @@ import { defaults } from "./defaults";
         useNewUrlParser: true,
         synchronize: true,
         logging: true,
-        entities: [TrueBlockWeight, Voter, VoterCount]
+        entities: [path.resolve(__dirname, '**/*.entity{.ts,.js}'),]
     });
 })();
 
