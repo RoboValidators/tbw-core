@@ -15,7 +15,7 @@ import { defaults } from "./defaults";
         useNewUrlParser: true,
         synchronize: true,
         logging: true,
-        entities: [path.resolve(__dirname, '**/*.entity{.ts,.js}'),]
+        entities: [path.resolve(__dirname, '**/*.entity{.ts,.js}')]
     });
 })();
 
