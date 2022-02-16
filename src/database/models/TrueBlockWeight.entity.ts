@@ -4,7 +4,7 @@ import { Voter as VoterType } from "../../types";
 import Voter from "./Voters";
 
 @Entity()
-export default class TrueBlockWeight {
+export class TrueBlockWeight {
   @PrimaryColumn()
   id: string;
   @Column()
