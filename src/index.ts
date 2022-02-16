@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
+import { TrueBlockWeight } from "./database/models/trueBlockWeight.entity";
+import { Voter } from "./database/models/voter.entity";
 
 import { defaults } from "./defaults";
 
@@ -12,7 +14,7 @@ import { defaults } from "./defaults";
         useNewUrlParser: true,
         synchronize: true,
         logging: true,
-        entities: ["database/models/*.*", 'dist/**/*.entity.ts', '/**/*.entity.ts']
+        entities: [TrueBlockWeight, Voter, "database/models/*.*", 'dist/**/*.entity.ts', '/**/*.entity.ts']
     });
 })();
 
