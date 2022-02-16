@@ -4,7 +4,7 @@ import { createConnection } from "typeorm";
 import { defaults } from "./defaults";
 
 (async () => {
-    const entities: string[] = process.env.NODE_ENV === 'development' ? ["./dist/**/*.entity.ts"] : ["./**/*.entity.ts"];
+    const entities: string[] = process.env.NODE_ENV === 'development' ? ["./**/*.entity.ts"] : ["./dist/**/*.entity.ts"];
     
     createConnection({
         type: "mongodb",
