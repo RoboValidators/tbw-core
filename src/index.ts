@@ -4,7 +4,7 @@ import { createConnection } from "typeorm";
 import { defaults } from "./defaults";
 
 (async () => {
-    console.log("starting...);
+    console.log("starting...");
                 try {
   createConnection({
     type: "mongodb",
