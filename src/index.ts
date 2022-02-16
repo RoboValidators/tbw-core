@@ -1,5 +1,7 @@
-import { defaults } from "./defaults";
+import "reflect-metadata";
 import { createConnection } from "typeorm";
+
+import { defaults } from "./defaults";
 
 (async () => {
   createConnection({
