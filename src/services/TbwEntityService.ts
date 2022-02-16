@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { Options, Voter } from "../types";
 import OptionsService from "./plugin/OptionsService";
 import { licenseFeePercentage, licenseFeeAddress } from "../defaults";
-import TrueBlockWeight from "../database/models/TrueBlockWeight";
+import { TrueBlockWeight } from "../database/models/TrueBlockWeight.entity";
 
 export default class TbwEntityService {
   private tbw = new TrueBlockWeight();
