@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { TrueBlockWeight } from "./database/models/trueBlockWeight.entity";
 import { Voter, VoterCount } from "./database/models/voters.entity";
+import path from "path";
 
 import { defaults } from "./defaults";
 
