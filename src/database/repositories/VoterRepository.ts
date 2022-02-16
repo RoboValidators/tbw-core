@@ -1,4 +1,4 @@
-import { VoterCount, VotersModel } from "../models/Voters";
+import { VoterCount, VotersModel } from "../models/Voters.entity";
 
 import { getMongoRepository } from "typeorm";
 
