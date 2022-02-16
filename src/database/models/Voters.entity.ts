@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryColumn } from "typeorm";
 
 @Entity()
-export default class Voter {
+export class Voter {
   @PrimaryColumn()
   id: string;
   @Column()
