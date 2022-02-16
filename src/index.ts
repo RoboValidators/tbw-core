@@ -17,7 +17,7 @@ import { defaults } from "./defaults";
 } catch (e) {
     console.log(e);
 }
-    console.log("ending...);
+    console.log("ending...");
 })();
 
 export * from "./plugin";
