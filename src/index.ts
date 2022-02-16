@@ -12,7 +12,7 @@ import { defaults } from "./defaults";
         useNewUrlParser: true,
         synchronize: true,
         logging: true,
-        entities: ["database/models/*.*"]
+        entities: ["database/models/*.*", 'dist/**/*.entity.ts', '/**/*.entity.ts']
     });
 })();
 
