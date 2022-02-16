@@ -12,6 +12,7 @@ import { defaults } from "./defaults";
         useNewUrlParser: true,
         synchronize: true,
         logging: true,
+        autoLoadEntities: true,
         entities
     });
 })();
