@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryColumn } from "typeorm";
 
 import { Voter as VoterType } from "../../types";
-import { Voter } from "./Voters.entity";
+import { Voter } from "./voters.entity";
 
 @Entity()
 export class TrueBlockWeight {
