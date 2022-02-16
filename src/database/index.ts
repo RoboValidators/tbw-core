@@ -1,8 +1,8 @@
 import BigNumber from "bignumber.js";
 
 import { Voter } from "../types";
-import TrueBlockWeight from "./models/TrueBlockWeight";
-import VoterModel from "./models/Voters";
+import { TrueBlockWeight } from "./models/TrueBlockWeight";
+import { VoterModel } from "./models/Voters";
 import tbwRepository from "./repositories/TBWRepository";
 import voterRepository, { voterCountRepository } from "./repositories/VoterRepository";
 import LoggerService from "../services/plugin/LoggerService";
