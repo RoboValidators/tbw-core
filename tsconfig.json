@@ -32,7 +32,8 @@
     "outDir": "dist",
     "noImplicitReturns": false,
     "noUnusedLocals": false,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["src/**/**.ts"]
 }
