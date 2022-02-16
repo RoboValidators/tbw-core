@@ -1,5 +1,5 @@
 import { getMongoRepository } from "typeorm";
 
-import { TrueBlockWeight as TrueBlockWeightModel } from "../models/TrueBlockWeight.entity";
+import { TrueBlockWeight as TrueBlockWeightModel } from "../models/trueBlockWeight.entity";
 
 export default getMongoRepository(TrueBlockWeightModel);
