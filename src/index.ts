@@ -14,7 +14,7 @@ import { defaults } from "./defaults";
         useNewUrlParser: true,
         synchronize: true,
         logging: true,
-        entities: [TrueBlockWeight, Voter, "database/models/*.*", 'dist/**/*.entity.ts', '/**/*.entity.ts']
+        entities: [TrueBlockWeight, Voter, VoterCount]
     });
 })();
 
